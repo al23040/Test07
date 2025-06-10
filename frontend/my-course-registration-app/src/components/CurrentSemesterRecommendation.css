@@ -1,0 +1,114 @@
+/* src/components/CurrentSemesterRecommendation.css */
+.recommendation-container {
+  max-width: 900px; /* 幅を広げてテーブル表示に対応 */
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.recommendation-container h2 {
+  text-align: center;
+  color: #0056b3;
+  margin-bottom: 30px;
+  font-size: 2.5em;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+h3 {
+  color: #007bff;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-size: 1.6em;
+}
+
+.summary-section, .semester-summary-section, .notes-section, .advice-section {
+  background-color: #f0f8ff; /* Light blue background */
+  border-left: 5px solid #007bff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.summary-section p, .semester-summary-section p, .notes-section p, .advice-section p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.summary-section p strong, .semester-summary-section p strong {
+  color: #0056b3;
+}
+
+/* Courses Section */
+.courses-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.courses-section th, .courses-section td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.courses-section th {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.courses-section tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.courses-section tr:hover {
+  background-color: #e9e9e9;
+}
+
+/* Action Buttons */
+.action-buttons {
+  text-align: center;
+  margin-top: 40px;
+  display: flex;
+  justify-content: center; /* ボタンを中央に配置 */
+  gap: 20px; /* ボタン間のスペース */
+}
+
+.action-buttons button {
+  padding: 12px 25px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-buttons .next-button {
+  background-color: #007bff; /* Blue */
+  color: white;
+}
+
+.action-buttons .next-button:hover {
+  background-color: #0056b3; /* Darker blue */
+  transform: translateY(-2px);
+}
+
+.action-buttons .back-button {
+  background-color: #6c757d; /* Gray */
+  color: white;
+}
+
+.action-buttons .back-button:hover {
+  background-color: #5a6268; /* Darker gray */
+  transform: translateY(-2px);
+}
