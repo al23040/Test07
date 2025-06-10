@@ -1,4 +1,5 @@
-from backend.TakenCourse import TakenCourse
+from backend.taken_course import TakenCourse
+
 
 class UserInfo:
     def __init__(self, user_id: int, taken_course: TakenCourse):
