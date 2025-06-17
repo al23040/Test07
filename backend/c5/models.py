@@ -38,7 +38,7 @@ class TakenCourse:
     semester: int
     year: int
     category: str = ""
-    
+
     def __post_init__(self):
         """Validate course data after initialization"""
         if self.evaluation in ['F', 'X']:
@@ -56,32 +56,32 @@ class UserInfo:
     gpa: float = 0.0
     created_at: datetime = field(default_factory=datetime.now)
     updated_at: datetime = field(default_factory=datetime.now)
-    
+
     def __post_init__(self):
         """Calculate totals after initialization"""
         self.calculate_totals()
-    
+
     def calculate_totals(self) -> None:
         """Calculate total credits and GPA"""
         passed_courses = [course for course in self.taken_courses if course.passed]
         self.total_credits = sum(course.credits for course in passed_courses)
-        
+
         # Calculate GPA
         if passed_courses:
             grade_points = {"A+": 4.3, "A": 4.0, "B": 3.0, "C": 2.0}
             total_points = sum(
-                grade_points.get(course.evaluation, 0.0) * course.credits 
-                for course in passed_courses 
+                grade_points.get(course.evaluation, 0.0) * course.credits
+                for course in passed_courses
                 if course.evaluation in grade_points
             )
             total_credit_hours = sum(
-                course.credits for course in passed_courses 
+                course.credits for course in passed_courses
                 if course.evaluation in grade_points
             )
             self.gpa = total_points / total_credit_hours if total_credit_hours > 0 else 0.0
         else:
             self.gpa = 0.0
-    
+
     def add_course(self, course: TakenCourse) -> bool:
         """Add a new course to user's record"""
         # Check if course already exists
@@ -93,13 +93,13 @@ class UserInfo:
                 existing_course.updated_at = datetime.now()
                 self.calculate_totals()
                 return True
-        
+
         # Add new course
         self.taken_courses.append(course)
         self.calculate_totals()
         self.updated_at = datetime.now()
         return True
-    
+
     def remove_course(self, subject_id: int) -> bool:
         """Remove a course from user's record"""
         for i, course in enumerate(self.taken_courses):
@@ -109,15 +109,15 @@ class UserInfo:
                 self.updated_at = datetime.now()
                 return True
         return False
-    
+
     def get_courses_by_category(self, category: str) -> List[TakenCourse]:
         """Get courses filtered by category"""
         return [course for course in self.taken_courses if course.category == category]
-    
+
     def get_passed_courses(self) -> List[TakenCourse]:
         """Get only passed courses"""
         return [course for course in self.taken_courses if course.passed]
-    
+
     def get_failed_courses(self) -> List[TakenCourse]:
         """Get only failed courses"""
         return [course for course in self.taken_courses if not course.passed]
@@ -131,7 +131,7 @@ class UserAccount:
     created_at: datetime = field(default_factory=datetime.now)
     last_login: Optional[datetime] = None
     is_active: bool = True
-    
+
     def update_last_login(self):
         """Update last login timestamp"""
         self.last_login = datetime.now()
@@ -150,7 +150,7 @@ class CourseRegistrationInfo:
     year: int
     category: str
     registration_date: datetime = field(default_factory=datetime.now)
-    
+
     def to_taken_course(self) -> TakenCourse:
         """Convert to TakenCourse object"""
         return TakenCourse(
@@ -177,23 +177,23 @@ class UserStatistics:
     courses_passed: int
     courses_failed: int
     completion_rate: float
-    
+
     @classmethod
     def from_user_info(cls, user_info: UserInfo) -> 'UserStatistics':
         """Create statistics from UserInfo"""
         passed_courses = user_info.get_passed_courses()
         failed_courses = user_info.get_failed_courses()
-        
+
         total_credits = sum(course.credits for course in user_info.taken_courses)
         passed_credits = sum(course.credits for course in passed_courses)
         failed_credits = sum(course.credits for course in failed_courses)
-        
+
         courses_taken = len(user_info.taken_courses)
         courses_passed = len(passed_courses)
         courses_failed = len(failed_courses)
-        
+
         completion_rate = (courses_passed / courses_taken * 100) if courses_taken > 0 else 0.0
-        
+
         return cls(
             user_id=user_info.user_id,
             total_credits=total_credits,

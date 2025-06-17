@@ -8,8 +8,8 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 import json
 
-from c5_account_manager import AccountManager
-from c5_models import TakenCourse, UserInfo
+from .account_manager import AccountManager
+from .models import TakenCourse, UserInfo
 
 
 class C5API:
@@ -17,17 +17,17 @@ class C5API:
     C5 Account Management Component API Interface
     Handles HTTP requests for user management and course registration
     """
-    
+
     def __init__(self, app: Flask):
         self.app = app
         self.account_manager = AccountManager()
-        
+
         # Register API routes
         self._register_routes()
-    
+
     def _register_routes(self):
         """Register API endpoints for C5 functionality"""
-        
+
         @self.app.route('/api/c5/users/register', methods=['POST'])
         def register_user():
             """
@@ -36,21 +36,21 @@ class C5API:
             """
             try:
                 data = request.get_json()
-                
+
                 # Validate required fields
                 if 'user_id' not in data or 'password' not in data:
                     return jsonify({'error': 'Missing user_id or password'}), 400
-                
+
                 user_id = data['user_id']
                 password = data['password']
-                
+
                 # Validate student ID format (5 digits)
                 if not (10000 <= user_id <= 99999):
                     return jsonify({'error': 'Student ID must be 5 digits'}), 400
-                
+
                 # Create user account
                 success = self.account_manager.create_user_account(user_id, password)
-                
+
                 if success:
                     return jsonify({
                         'status': 'success',
@@ -64,14 +64,14 @@ class C5API:
                         'message': 'Registration failed - user may already exist',
                         'timestamp': datetime.now().isoformat()
                     }), 409
-                    
+
             except Exception as e:
                 return jsonify({
                     'status': 'error',
                     'message': str(e),
                     'timestamp': datetime.now().isoformat()
                 }), 500
-        
+
         @self.app.route('/api/c5/users/login', methods=['POST'])
         def login_user():
             """
@@ -80,20 +80,20 @@ class C5API:
             """
             try:
                 data = request.get_json()
-                
+
                 if 'user_id' not in data or 'password' not in data:
                     return jsonify({'error': 'Missing user_id or password'}), 400
-                
+
                 user_id = data['user_id']
                 password = data['password']
-                
+
                 # Authenticate user
                 authenticated = self.account_manager.authenticate_user(user_id, password)
-                
+
                 if authenticated:
                     # Get user information for login
                     user_info = self.account_manager.login_user(user_id)
-                    
+
                     if user_info:
                         return jsonify({
                             'status': 'success',
@@ -118,14 +118,14 @@ class C5API:
                         'message': 'Invalid credentials',
                         'timestamp': datetime.now().isoformat()
                     }), 401
-                    
+
             except Exception as e:
                 return jsonify({
                     'status': 'error',
                     'message': str(e),
                     'timestamp': datetime.now().isoformat()
                 }), 500
-        
+
         @self.app.route('/api/c5/users/<int:user_id>/info', methods=['GET'])
         def get_user_info(user_id: int):
             """
@@ -134,7 +134,7 @@ class C5API:
             """
             try:
                 user_info = self.account_manager.get_user_info(user_id)
-                
+
                 if user_info:
                     return jsonify({
                         'status': 'success',
@@ -164,14 +164,14 @@ class C5API:
                         'message': 'User not found',
                         'timestamp': datetime.now().isoformat()
                     }), 404
-                    
+
             except Exception as e:
                 return jsonify({
                     'status': 'error',
                     'message': str(e),
                     'timestamp': datetime.now().isoformat()
                 }), 500
-        
+
         @self.app.route('/api/c5/users/<int:user_id>/courses', methods=['POST'])
         def register_user_courses(user_id: int):
             """
@@ -180,12 +180,12 @@ class C5API:
             """
             try:
                 data = request.get_json()
-                
+
                 if 'courses' not in data:
                     return jsonify({'error': 'Missing courses data'}), 400
-                
+
                 courses_data = data['courses']
-                
+
                 # Parse courses data
                 taken_courses = []
                 for course_data in courses_data:
@@ -206,10 +206,10 @@ class C5API:
                             'error': f'Missing required field in course data: {e}',
                             'timestamp': datetime.now().isoformat()
                         }), 400
-                
+
                 # Register courses
                 success = self.account_manager.register_user_courses(user_id, taken_courses)
-                
+
                 if success:
                     return jsonify({
                         'status': 'success',
@@ -223,14 +223,14 @@ class C5API:
                         'message': 'Course registration failed',
                         'timestamp': datetime.now().isoformat()
                     }), 500
-                    
+
             except Exception as e:
                 return jsonify({
                     'status': 'error',
                     'message': str(e),
                     'timestamp': datetime.now().isoformat()
                 }), 500
-        
+
         @self.app.route('/api/c5/users/<int:user_id>/courses', methods=['GET'])
         def get_user_courses(user_id: int):
             """
@@ -239,7 +239,7 @@ class C5API:
             """
             try:
                 courses = self.account_manager.get_user_courses(user_id)
-                
+
                 return jsonify({
                     'status': 'success',
                     'user_id': user_id,
@@ -247,14 +247,14 @@ class C5API:
                     'courses_count': len(courses),
                     'timestamp': datetime.now().isoformat()
                 }), 200
-                
+
             except Exception as e:
                 return jsonify({
                     'status': 'error',
                     'message': str(e),
                     'timestamp': datetime.now().isoformat()
                 }), 500
-        
+
         @self.app.route('/api/c5/users/<int:user_id>/courses/<int:subject_id>', methods=['PUT'])
         def update_user_course(user_id: int, subject_id: int):
             """
@@ -263,7 +263,7 @@ class C5API:
             """
             try:
                 data = request.get_json()
-                
+
                 # Create updated course object
                 course = TakenCourse(
                     subject_id=subject_id,
@@ -275,9 +275,9 @@ class C5API:
                     year=data.get('year', 1),
                     category=data.get('category', '')
                 )
-                
+
                 success = self.account_manager.update_user_course(user_id, course)
-                
+
                 if success:
                     return jsonify({
                         'status': 'success',
@@ -290,14 +290,14 @@ class C5API:
                         'message': 'Course update failed',
                         'timestamp': datetime.now().isoformat()
                     }), 500
-                    
+
             except Exception as e:
                 return jsonify({
                     'status': 'error',
                     'message': str(e),
                     'timestamp': datetime.now().isoformat()
                 }), 500
-        
+
         @self.app.route('/api/c5/users/<int:user_id>/statistics', methods=['GET'])
         def get_user_statistics(user_id: int):
             """
@@ -306,7 +306,7 @@ class C5API:
             """
             try:
                 stats = self.account_manager.get_user_statistics(user_id)
-                
+
                 if stats:
                     return jsonify({
                         'status': 'success',
@@ -329,14 +329,14 @@ class C5API:
                         'message': 'User statistics not found',
                         'timestamp': datetime.now().isoformat()
                     }), 404
-                    
+
             except Exception as e:
                 return jsonify({
                     'status': 'error',
                     'message': str(e),
                     'timestamp': datetime.now().isoformat()
                 }), 500
-        
+
         @self.app.route('/api/c5/users/<int:user_id>/verify', methods=['POST'])
         def verify_user_info(user_id: int):
             """
@@ -345,7 +345,7 @@ class C5API:
             """
             try:
                 verified = self.account_manager.verify_user_info(user_id)
-                
+
                 if verified:
                     return jsonify({
                         'status': 'success',
@@ -360,14 +360,14 @@ class C5API:
                         'verified': False,
                         'timestamp': datetime.now().isoformat()
                     }), 404
-                    
+
             except Exception as e:
                 return jsonify({
                     'status': 'error',
                     'message': str(e),
                     'timestamp': datetime.now().isoformat()
                 }), 500
-        
+
         @self.app.route('/api/c5/users/<int:user_id>/export', methods=['GET'])
         def export_user_data(user_id: int):
             """
@@ -376,7 +376,7 @@ class C5API:
             """
             try:
                 json_data = self.account_manager.export_user_data(user_id)
-                
+
                 if json_data:
                     return jsonify({
                         'status': 'success',
@@ -389,14 +389,14 @@ class C5API:
                         'message': 'User data not found',
                         'timestamp': datetime.now().isoformat()
                     }), 404
-                    
+
             except Exception as e:
                 return jsonify({
                     'status': 'error',
                     'message': str(e),
                     'timestamp': datetime.now().isoformat()
                 }), 500
-        
+
         @self.app.route('/api/c5/users', methods=['GET'])
         def get_all_users():
             """
@@ -405,14 +405,114 @@ class C5API:
             """
             try:
                 users = self.account_manager.get_all_users()
-                
+
                 return jsonify({
                     'status': 'success',
                     'users': users,
                     'count': len(users),
                     'timestamp': datetime.now().isoformat()
                 }), 200
-                
+
+            except Exception as e:
+                return jsonify({
+                    'status': 'error',
+                    'message': str(e),
+                    'timestamp': datetime.now().isoformat()
+                }), 500
+
+        # F3 Subject Management Endpoints
+
+        @self.app.route('/api/c5/subjects', methods=['POST'])
+        def add_subject():
+            """
+            Add new subject to F3 (subjects table)
+            """
+            try:
+                data = request.get_json()
+
+                required_fields = ['subject_id', 'subject_name', 'credits', 'category',
+                                 'requirement_type', 'semester_offered', 'year_offered']
+                for field in required_fields:
+                    if field not in data:
+                        return jsonify({'error': f'Missing required field: {field}'}), 400
+
+                success = self.account_manager.db_manager.add_subject(
+                    subject_id=data['subject_id'],
+                    subject_name=data['subject_name'],
+                    credits=data['credits'],
+                    category=data['category'],
+                    requirement_type=data['requirement_type'],
+                    semester_offered=data['semester_offered'],
+                    year_offered=data['year_offered'],
+                    time_slot=data.get('time_slot', ''),
+                    prerequisites=data.get('prerequisites', []),
+                    description=data.get('description', '')
+                )
+
+                if success:
+                    return jsonify({
+                        'status': 'success',
+                        'message': 'Subject added successfully',
+                        'subject_id': data['subject_id'],
+                        'timestamp': datetime.now().isoformat()
+                    }), 201
+                else:
+                    return jsonify({
+                        'status': 'error',
+                        'message': 'Failed to add subject',
+                        'timestamp': datetime.now().isoformat()
+                    }), 500
+
+            except Exception as e:
+                return jsonify({
+                    'status': 'error',
+                    'message': str(e),
+                    'timestamp': datetime.now().isoformat()
+                }), 500
+
+        @self.app.route('/api/c5/subjects/<int:subject_id>', methods=['GET'])
+        def get_subject(subject_id: int):
+            """
+            Get subject information from F3 (subjects table)
+            """
+            try:
+                subject = self.account_manager.db_manager.get_subject(subject_id)
+
+                if subject:
+                    return jsonify({
+                        'status': 'success',
+                        'subject': subject,
+                        'timestamp': datetime.now().isoformat()
+                    }), 200
+                else:
+                    return jsonify({
+                        'status': 'error',
+                        'message': 'Subject not found',
+                        'timestamp': datetime.now().isoformat()
+                    }), 404
+
+            except Exception as e:
+                return jsonify({
+                    'status': 'error',
+                    'message': str(e),
+                    'timestamp': datetime.now().isoformat()
+                }), 500
+
+        @self.app.route('/api/c5/subjects', methods=['GET'])
+        def get_all_subjects():
+            """
+            Get all subjects from F3 (subjects table)
+            """
+            try:
+                subjects = self.account_manager.db_manager.get_all_subjects()
+
+                return jsonify({
+                    'status': 'success',
+                    'subjects': subjects,
+                    'count': len(subjects),
+                    'timestamp': datetime.now().isoformat()
+                }), 200
+
             except Exception as e:
                 return jsonify({
                     'status': 'error',
@@ -424,10 +524,10 @@ class C5API:
 def register_c5_api(app: Flask) -> C5API:
     """
     Register C5 API endpoints with Flask app
-    
+
     Args:
         app: Flask application instance
-        
+
     Returns:
         C5API instance
     """

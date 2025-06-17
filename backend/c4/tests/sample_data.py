@@ -3,13 +3,13 @@ Sample data generator for testing C4 condition processing component
 """
 
 from typing import List, Dict
-from condition_processor import Course, CourseCategory, RequirementType
+from c4.condition_processor import Course, CourseCategory, RequirementType
 
 
 def generate_comprehensive_course_catalog() -> List[Course]:
     """Generate a comprehensive course catalog for testing"""
     courses = []
-    
+
     # Year 1 Courses
     # Major courses (専門科目) - Year 1
     courses.extend([
@@ -18,7 +18,7 @@ def generate_comprehensive_course_catalog() -> List[Course]:
         Course("コンピュータ基礎", "CS103", None, CourseCategory.MAJOR, RequirementType.COMPULSORY, 2, 1, 1, "4-5", []),
         Course("情報数学", "CS104", None, CourseCategory.MAJOR, RequirementType.ELECTIVE, 2, 2, 1, "3-4", []),
     ])
-    
+
     # Year 2 Courses
     # Major courses (専門科目) - Year 2
     courses.extend([
@@ -28,7 +28,7 @@ def generate_comprehensive_course_catalog() -> List[Course]:
         Course("Web技術基礎", "CS204", None, CourseCategory.MAJOR, RequirementType.ELECTIVE, 2, 2, 2, "3-4", ["CS102"]),
         Course("データベース基礎", "CS205", None, CourseCategory.MAJOR, RequirementType.ELECTIVE, 2, 1, 2, "2-3", ["CS201"]),
     ])
-    
+
     # Year 3 Courses
     # Major courses (専門科目) - Year 3
     courses.extend([
@@ -38,7 +38,7 @@ def generate_comprehensive_course_catalog() -> List[Course]:
         Course("機械学習基礎", "CS304", None, CourseCategory.MAJOR, RequirementType.ELECTIVE, 2, 2, 3, "2-3", ["CS201"]),
         Course("情報セキュリティ", "CS305", None, CourseCategory.MAJOR, RequirementType.ELECTIVE, 2, 1, 3, "3-4", ["CS203"]),
     ])
-    
+
     # Year 4 Courses
     # Major courses (専門科目) - Year 4
     courses.extend([
@@ -47,7 +47,7 @@ def generate_comprehensive_course_catalog() -> List[Course]:
         Course("プロジェクト管理", "CS403", None, CourseCategory.MAJOR, RequirementType.ELECTIVE, 2, 1, 4, "3-4", ["CS301"]),
         Course("高度システム開発", "CS404", None, CourseCategory.MAJOR, RequirementType.ELECTIVE, 2, 2, 4, "3-4", ["CS303"]),
     ])
-    
+
     # Common Math courses (共通数理科目)
     courses.extend([
         Course("微分積分学I", "MATH101", None, CourseCategory.COMMON_MATH, RequirementType.COMPULSORY, 2, 1, 1, "2-3", []),
@@ -57,7 +57,7 @@ def generate_comprehensive_course_catalog() -> List[Course]:
         Course("統計学", "MATH301", None, CourseCategory.COMMON_MATH, RequirementType.COMPULSORY, 2, 1, 2, "4-5", ["MATH102"]),
         Course("確率論", "MATH302", None, CourseCategory.COMMON_MATH, RequirementType.COMPULSORY, 2, 2, 2, "4-5", ["MATH202"]),
     ])
-    
+
     # Language courses (言語科目)
     courses.extend([
         Course("英語I", "ENG101", None, CourseCategory.LANGUAGE, RequirementType.COMPULSORY, 2, 1, 1, "2-3", []),
@@ -67,7 +67,7 @@ def generate_comprehensive_course_catalog() -> List[Course]:
         Course("第二外国語I", "LANG101", None, CourseCategory.LANGUAGE, RequirementType.ELECTIVE, 2, 1, 1, "4-5", []),
         Course("第二外国語II", "LANG102", None, CourseCategory.LANGUAGE, RequirementType.ELECTIVE, 2, 2, 1, "4-5", ["LANG101"]),
     ])
-    
+
     # University common courses (全学共通科目)
     courses.extend([
         Course("情報リテラシー", "GEN101", None, CourseCategory.UNIVERSITY_COMMON, RequirementType.COMPULSORY, 2, 1, 1, "3-4", []),
@@ -75,19 +75,19 @@ def generate_comprehensive_course_catalog() -> List[Course]:
         Course("科学技術史", "GEN201", None, CourseCategory.UNIVERSITY_COMMON, RequirementType.COMPULSORY, 2, 1, 2, "4-5", []),
         Course("技術者倫理", "GEN202", None, CourseCategory.UNIVERSITY_COMMON, RequirementType.COMPULSORY, 2, 2, 2, "4-5", []),
     ])
-    
+
     # PE courses (体育健康科目)
     courses.extend([
         Course("体育実技I", "PE101", None, CourseCategory.HEALTH_PE, RequirementType.COMPULSORY, 1, 1, 1, "2-3", []),
         Course("体育実技II", "PE102", None, CourseCategory.HEALTH_PE, RequirementType.COMPULSORY, 1, 2, 1, "2-3", []),
     ])
-    
+
     # Informatics courses (情報科目)
     courses.extend([
         Course("情報基礎", "INFO101", None, CourseCategory.INFORMATICS, RequirementType.COMPULSORY, 2, 1, 1, "3-4", []),
         Course("情報処理演習", "INFO102", None, CourseCategory.INFORMATICS, RequirementType.COMPULSORY, 2, 2, 1, "3-4", ["INFO101"]),
     ])
-    
+
     return courses
 
 
@@ -98,21 +98,21 @@ def generate_sample_completed_courses() -> List[Course]:
         Course("プログラミング基礎", "CS101", "A", CourseCategory.MAJOR, RequirementType.COMPULSORY, 2, 1, 1, "2-3", []),
         Course("情報技術概論", "CS102", "B", CourseCategory.MAJOR, RequirementType.COMPULSORY, 2, 2, 1, "2-3", []),
         Course("コンピュータ基礎", "CS103", "A", CourseCategory.MAJOR, RequirementType.COMPULSORY, 2, 1, 1, "4-5", []),
-        
+
         Course("微分積分学I", "MATH101", "B", CourseCategory.COMMON_MATH, RequirementType.COMPULSORY, 2, 1, 1, "2-3", []),
         Course("微分積分学II", "MATH102", "A", CourseCategory.COMMON_MATH, RequirementType.COMPULSORY, 2, 2, 1, "2-3", ["MATH101"]),
         Course("線形代数学I", "MATH201", "B", CourseCategory.COMMON_MATH, RequirementType.COMPULSORY, 2, 1, 1, "3-4", []),
         Course("線形代数学II", "MATH202", "A", CourseCategory.COMMON_MATH, RequirementType.COMPULSORY, 2, 2, 1, "3-4", ["MATH201"]),
-        
+
         Course("英語I", "ENG101", "A", CourseCategory.LANGUAGE, RequirementType.COMPULSORY, 2, 1, 1, "2-3", []),
         Course("英語II", "ENG102", "B", CourseCategory.LANGUAGE, RequirementType.COMPULSORY, 2, 2, 1, "2-3", ["ENG101"]),
-        
+
         Course("情報リテラシー", "GEN101", "A", CourseCategory.UNIVERSITY_COMMON, RequirementType.COMPULSORY, 2, 1, 1, "3-4", []),
         Course("キャリアデザイン", "GEN102", "A", CourseCategory.UNIVERSITY_COMMON, RequirementType.COMPULSORY, 2, 2, 1, "3-4", []),
-        
+
         Course("体育実技I", "PE101", "A", CourseCategory.HEALTH_PE, RequirementType.COMPULSORY, 1, 1, 1, "2-3", []),
         Course("体育実技II", "PE102", "A", CourseCategory.HEALTH_PE, RequirementType.COMPULSORY, 1, 2, 1, "2-3", []),
-        
+
         Course("情報基礎", "INFO101", "B", CourseCategory.INFORMATICS, RequirementType.COMPULSORY, 2, 1, 1, "3-4", []),
         Course("情報処理演習", "INFO102", "A", CourseCategory.INFORMATICS, RequirementType.COMPULSORY, 2, 2, 1, "3-4", ["INFO101"]),
     ]

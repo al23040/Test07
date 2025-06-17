@@ -44,7 +44,7 @@ class UserConditions:
     avoid_first_period: bool = False
     preferred_time_slots: List[str] = None
     preferred_categories: List[CourseCategory] = None
-    
+
     def __post_init__(self):
         if self.preferred_time_slots is None:
             self.preferred_time_slots = []
@@ -81,8 +81,8 @@ class ConditionProcessor:
             CourseCategory.MAJOR: {'compulsory': 40, 'elective': 50}
         }
         self.total_required_credits = 124
-        
-    def process_current_semester_recommendation(self, 
+
+    def process_current_semester_recommendation(self,
                                                user_id: int,
                                                user_conditions: UserConditions,
                                                completed_courses: List[Course],
@@ -93,16 +93,16 @@ class ConditionProcessor:
         """
         remaining_requirements = self._calculate_remaining_requirements(completed_courses)
         filtered_courses = self._filter_courses_by_conditions(available_courses, user_conditions)
-        
+
         recommended_courses = self._select_optimal_courses(
-            filtered_courses, 
+            filtered_courses,
             remaining_requirements,
             user_conditions
         )
-        
+
         current_semester = self._get_current_semester()
         current_year = self._get_current_year()
-        
+
         pattern = SuggestedCoursePattern(
             semester=current_semester,
             year=current_year,
@@ -110,9 +110,9 @@ class ConditionProcessor:
             total_credits=sum(course.credit for course in recommended_courses),
             category_credits=self._calculate_category_credits(recommended_courses)
         )
-        
+
         return [pattern]
-    
+
     def generate_four_year_patterns(self,
                                    user_id: int,
                                    user_conditions: UserConditions,
@@ -125,109 +125,109 @@ class ConditionProcessor:
         patterns = []
         remaining_requirements = self._calculate_remaining_requirements(completed_courses)
         available_courses = self._get_available_courses(completed_courses, all_courses)
-        
+
         # Generate multiple patterns with different strategies
         pattern1 = self._generate_balanced_pattern(available_courses, remaining_requirements, user_conditions)
         pattern2 = self._generate_early_major_pattern(available_courses, remaining_requirements, user_conditions)
         pattern3 = self._generate_flexible_pattern(available_courses, remaining_requirements, user_conditions)
-        
+
         patterns.extend([pattern1, pattern2, pattern3])
-        
+
         return [p for p in patterns if p.graduation_feasible]
-    
+
     def _calculate_remaining_requirements(self, completed_courses: List[Course]) -> Dict[CourseCategory, Dict[str, int]]:
         """Calculate remaining graduation requirements"""
         completed_credits = {}
         for category in CourseCategory:
             completed_credits[category] = {'compulsory': 0, 'elective': 0}
-        
+
         for course in completed_courses:
             if course.grade and course.grade not in ['F', 'X']:  # Passed courses
                 req_type = 'compulsory' if course.requirement == RequirementType.COMPULSORY else 'elective'
                 completed_credits[course.category][req_type] += course.credit
-        
+
         remaining = {}
         for category in CourseCategory:
             remaining[category] = {
-                'compulsory': max(0, self.graduation_requirements[category]['compulsory'] - 
+                'compulsory': max(0, self.graduation_requirements[category]['compulsory'] -
                                 completed_credits[category]['compulsory']),
-                'elective': max(0, self.graduation_requirements[category]['elective'] - 
+                'elective': max(0, self.graduation_requirements[category]['elective'] -
                               completed_credits[category]['elective'])
             }
-        
+
         return remaining
-    
+
     def _filter_courses_by_conditions(self, courses: List[Course], conditions: UserConditions) -> List[Course]:
         """Filter courses based on user conditions"""
         filtered = []
-        
+
         for course in courses:
             # Check first period avoidance
             if conditions.avoid_first_period and course.time_slot and '1' in course.time_slot:
                 continue
-                
+
             # Check preferred time slots
             if conditions.preferred_time_slots:
                 if not course.time_slot or not any(slot in course.time_slot for slot in conditions.preferred_time_slots):
                     continue
-            
+
             # Check preferred categories
             if conditions.preferred_categories:
                 if course.category not in conditions.preferred_categories:
                     continue
-            
+
             filtered.append(course)
-        
+
         return filtered
-    
-    def _select_optimal_courses(self, 
+
+    def _select_optimal_courses(self,
                                available_courses: List[Course],
                                remaining_requirements: Dict[CourseCategory, Dict[str, int]],
                                conditions: UserConditions) -> List[Course]:
         """Select optimal courses for current semester"""
         selected = []
         total_credits = 0
-        
+
         # First, select required courses
         for course in available_courses:
             if total_credits >= conditions.max_units:
                 break
-                
+
             category_remaining = remaining_requirements[course.category]
             req_type = 'compulsory' if course.requirement == RequirementType.COMPULSORY else 'elective'
-            
+
             if category_remaining[req_type] > 0 and total_credits + course.credit <= conditions.max_units:
                 selected.append(course)
                 total_credits += course.credit
                 category_remaining[req_type] -= course.credit
-        
+
         # Then, add elective courses to reach minimum units
         for course in available_courses:
             if course in selected:
                 continue
-                
+
             if total_credits >= conditions.min_units:
                 break
-                
+
             if total_credits + course.credit <= conditions.max_units:
                 selected.append(course)
                 total_credits += course.credit
-        
+
         return selected
-    
+
     def _calculate_category_credits(self, courses: List[Course]) -> Dict[CourseCategory, int]:
         """Calculate credits by category"""
         credits = {}
         for category in CourseCategory:
             credits[category] = sum(course.credit for course in courses if course.category == category)
         return credits
-    
+
     def _get_available_courses(self, completed_courses: List[Course], all_courses: List[Course]) -> List[Course]:
         """Get courses available for registration"""
         completed_codes = {course.code for course in completed_courses if course.grade not in ['F', 'X']}
         return [course for course in all_courses if course.code not in completed_codes]
-    
-    def _generate_balanced_pattern(self, 
+
+    def _generate_balanced_pattern(self,
                                   available_courses: List[Course],
                                   remaining_requirements: Dict[CourseCategory, Dict[str, int]],
                                   conditions: UserConditions) -> PlanPattern:
@@ -250,9 +250,9 @@ class ConditionProcessor:
                 )
                 year_patterns.append(pattern)
             yearly_patterns.append(year_patterns)
-        
+
         total_credits = sum(sum(p.total_credits for p in year) for year in yearly_patterns)
-        
+
         return PlanPattern(
             pattern_id="balanced",
             description="バランス型 - 各学期に均等に科目を配置",
@@ -260,8 +260,8 @@ class ConditionProcessor:
             total_credits=total_credits,
             graduation_feasible=total_credits >= self.total_required_credits
         )
-    
-    def _generate_early_major_pattern(self, 
+
+    def _generate_early_major_pattern(self,
                                      available_courses: List[Course],
                                      remaining_requirements: Dict[CourseCategory, Dict[str, int]],
                                      conditions: UserConditions) -> PlanPattern:
@@ -274,8 +274,8 @@ class ConditionProcessor:
             total_credits=0,
             graduation_feasible=False
         )
-    
-    def _generate_flexible_pattern(self, 
+
+    def _generate_flexible_pattern(self,
                                   available_courses: List[Course],
                                   remaining_requirements: Dict[CourseCategory, Dict[str, int]],
                                   conditions: UserConditions) -> PlanPattern:
@@ -288,8 +288,8 @@ class ConditionProcessor:
             total_credits=0,
             graduation_feasible=False
         )
-    
-    def _select_semester_courses(self, 
+
+    def _select_semester_courses(self,
                                 available_courses: List[Course],
                                 remaining_requirements: Dict[CourseCategory, Dict[str, int]],
                                 conditions: UserConditions,
@@ -299,26 +299,26 @@ class ConditionProcessor:
         # Implementation for semester-specific course selection
         semester_courses = []
         target_credits = (conditions.min_units + conditions.max_units) // 2
-        
+
         # Filter courses available in this semester/year
         semester_available = [
-            course for course in available_courses 
+            course for course in available_courses
             if course.year <= year and course.semester == semester
         ]
-        
+
         # Apply condition filtering
         filtered_courses = self._filter_courses_by_conditions(semester_available, conditions)
-        
+
         # Select optimal courses for this semester
         selected = self._select_optimal_courses(filtered_courses, remaining_requirements, conditions)
-        
+
         return selected[:6]  # Limit to reasonable number of courses per semester
-    
+
     def _get_current_semester(self) -> int:
         """Get current semester (1 or 2)"""
         # Implementation to determine current semester
         return 1
-    
+
     def _get_current_year(self) -> int:
         """Get current academic year"""
         # Implementation to determine current year

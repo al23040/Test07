@@ -89,18 +89,30 @@
 | last_login | | 最終ログイン | TIMESTAMP | |
 | is_active | | アクティブ状態 | BOOLEAN | |
 
-#### F2: コース情報 (registrations table)
+#### F2: 履修登録情報 (registrations table) - 評価済み科目
 | フィールド | 主キー | 説明 | 型 | 範囲 |
 |------------|--------|------|-----|------|
-| user_id | ◌ | ユーザ識別番号 | INTEGER | |
-| subject_id | ◌ | 科目識別ID | INTEGER | |
-| subject_name | | 科目名 | TEXT | |
+| user_id | ◌ | ユーザ識別番号 | INTEGER | FK to F1 |
+| subject_id | ◌ | 科目識別ID | INTEGER | FK to F3 |
 | evaluation | | 科目評価文字 | TEXT | A+,A,B,C,F,X |
-| credits | | 単位数 | INTEGER | |
 | passed | | 合否状態 | BOOLEAN | |
-| semester | | 学期 | INTEGER | 1,2 |
-| year | | 年次 | INTEGER | 1-4 |
+| semester_taken | | 履修学期 | INTEGER | 1,2 |
+| year_taken | | 履修年次 | INTEGER | 1-4 |
+| registration_date | | 登録日時 | TIMESTAMP | |
+
+#### F3: 科目情報 (subjects table) - 科目マスタ
+| フィールド | 主キー | 説明 | 型 | 範囲 |
+|------------|--------|------|-----|------|
+| subject_id | ○ | 科目識別ID | INTEGER | |
+| subject_name | | 科目名 | TEXT | |
+| credits | | 単位数 | INTEGER | |
 | category | | 科目カテゴリ | TEXT | |
+| requirement_type | | 必修・選択区分 | TEXT | |
+| semester_offered | | 開講学期 | INTEGER | 1,2 |
+| year_offered | | 開講年次 | INTEGER | 1-4 |
+| time_slot | | 時間割 | TEXT | |
+| prerequisites | | 前提科目 | TEXT | JSON array |
+| description | | 科目説明 | TEXT | |
 
 ## 統合テスト結果
 

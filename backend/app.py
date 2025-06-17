@@ -1,14 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from database import Database
-from c4_api import register_c4_api
-from c5_api import register_c5_api
+from c4 import register_c4_api
+from c5 import register_c5_api, AccountManager
 
 app = Flask(__name__)
 CORS(app)
 
-# Initialize database
-db = Database()
+# Initialize C5 Account Manager
+account_manager = AccountManager()
 
 # Register API endpoints
 c4_api = register_c4_api(app)  # C4 Condition Processing
@@ -26,18 +25,18 @@ def user_login():
         data = request.get_json()
         user_id = data.get('user_id')
         password = data.get('password')
-        
+
         if not user_id or not password:
             return jsonify({'error': 'Missing user_id or password'}), 400
-        
+
         # Validate user credentials
-        is_valid = db.check_user(user_id, password)
-        
+        is_valid = account_manager.authenticate_user(user_id, password)
+
         if is_valid:
             return jsonify({'status': 'success', 'message': 'Login successful'}), 200
         else:
             return jsonify({'status': 'error', 'message': 'Invalid credentials'}), 401
-            
+
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
@@ -48,15 +47,17 @@ def user_register():
         data = request.get_json()
         user_id = data.get('user_id')
         password = data.get('password')
-        
+
         if not user_id or not password:
             return jsonify({'error': 'Missing user_id or password'}), 400
-        
+
         # Add user to database
-        db.add_user(user_id, password)
-        
+        success = account_manager.create_user_account(user_id, password)
+        if not success:
+            return jsonify({'status': 'error', 'message': 'Failed to create user account'}), 400
+
         return jsonify({'status': 'success', 'message': 'User registered successfully'}), 201
-        
+
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
