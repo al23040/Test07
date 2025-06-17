@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from database import Database
 from c4_api import register_c4_api
+from c5_api import register_c5_api
 
 app = Flask(__name__)
 CORS(app)
@@ -9,8 +10,9 @@ CORS(app)
 # Initialize database
 db = Database()
 
-# Register C4 API endpoints
-c4_api = register_c4_api(app)
+# Register API endpoints
+c4_api = register_c4_api(app)  # C4 Condition Processing
+c5_api = register_c5_api(app)  # C5 Account Management
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
