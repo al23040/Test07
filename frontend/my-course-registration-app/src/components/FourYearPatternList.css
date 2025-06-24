@@ -1,0 +1,73 @@
+/* src/components/FourYearPatternList.css */
+
+.four-year-pattern-list {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.four-year-pattern-list h2 {
+  color: #333;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #61dafb;
+  padding-bottom: 10px;
+}
+
+.pattern-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* レスポンシブなグリッド */
+  gap: 25px;
+  padding: 10px;
+}
+
+.pattern-card {
+  background-color: #fdfdfd;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 強めのシャドウ */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pattern-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.pattern-card h3 {
+  color: #444;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+}
+
+.pattern-card p {
+  color: #666;
+  font-size: 0.95em;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.pattern-card p:last-of-type {
+  margin-bottom: 20px;
+}
+
+.detail-link {
+  display: inline-block;
+  background-color: #61dafb;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-top: auto; /* カード下部に配置 */
+}
+
+.detail-link:hover {
+  background-color: #21a1f1;
+}
