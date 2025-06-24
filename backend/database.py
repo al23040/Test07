@@ -20,19 +20,23 @@ class Database:
             )
         ''', (USER_TABLE,))
         self.cursor.execute('''
-            CREATE TABLE IF NOT EXISTS ? (
-                user_id INTEGER NOT NULL,
-                subject_id INTEGER NOT NULL,
-                evaluation TEXT NOT NULL,
-                passed BOOLEAN NOT NULL
-            )
-        ''', (REGISTRATION_TABLE,))
+            CREATE TABLE IF NOT EXISTS {SUBJECT_TABLE} (
+                code TEXT PRIMARY KEY,
+                subject_name TEXT NOT NULL,
+                category TEXT NOT NULL,
+                requirement TEXT NOT NULL,
+                credit INTEGER NOT NULL,
+                term TEXT NOT NULL
+            )        
+        ''')
         self.cursor.execute('''
-            CREATE TABLE IF NOT EXISTS ? (
-                subject_id INTEGER PRIMARY KEY,
-                name TEXT NOT NULL
+            CREATE TABLE IF NOT EXISTS {REGISTRATION_TABLE} (
+                user_id INTEGER NOT NULL,
+                code TEXT NOT NULL,
+                PRIMARY KEY(user_id,code),
+                FOREIGN KEY (code) REFERENCES subjects(code)
             )
-        ''', (SUBJECT_TABLE,))
+        ''')
         self.connection.commit()
 
     def close(self) -> None:

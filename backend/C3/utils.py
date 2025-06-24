@@ -1,3 +1,5 @@
+from models import Subject, Registration
+
 def text_replace(text: str):
     text = text.replace("Ｒｅａｄｉｎｇ＆Ｗｒｉｔｉ", "Ｒｅａｄｉｎｇ＆Ｗｒｉｔｉｎｇ　")
     text = text.replace("Ｌｉｓｔｅｎｉｎｇ＆Ｓｐｅ", "Ｌｉｓｔｅｎｉｎｇ＆Ｓｐｅａｋｉｎｇ　")
@@ -9,8 +11,7 @@ def text_replace(text: str):
     return text
 
 def get_course(code):
-    model_class = "決まり次第変更"
-    course = model_class.query.filter_by(code=code).first()
+    course = Subject.query.filter_by(code=code).first()
     if course:
         return {
             "subject_name": course.subject_name,
@@ -39,8 +40,7 @@ def make_send_available_courses(term, send_courses: list):
     limit_semester_order = semester_order.get(semester)
     taken_codes = set(course["code"] for course in send_courses)
 
-    model_class = "決まり次第変更"
-    all_courses = model_class.query.all()
+    all_courses = Subject.query.all()
 
     send_available_courses = []
     for course in all_courses:
@@ -153,7 +153,7 @@ def make_send_credits_data(send_courses):
         "language_credits": language_credits,
         "social_sciences_credits": social_sciences_credits,
         "major_credits": major_credits,
-        "informatics_credits": informatics_credits
+        "informatics_credits": informatics_credits,
         "PE_health_credits": PE_health_credits
     }
 

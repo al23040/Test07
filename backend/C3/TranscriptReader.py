@@ -52,7 +52,7 @@ class TranscriptReader:
                 if not text:
                     continue
 
-                utils.text_replace(text)
+                text = utils.text_replace(text)
                 lines = text.split("\n")
 
             for line in lines:
