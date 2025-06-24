@@ -44,7 +44,7 @@ class C5DatabaseManager:
                 CREATE TABLE IF NOT EXISTS registrations (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER NOT NULL,
-                    subject_id INTEGER NOT NULL,
+                    subject_id TEXT NOT NULL,
                     evaluation TEXT NOT NULL,
                     passed BOOLEAN NOT NULL,
                     semester_taken INTEGER NOT NULL,
@@ -59,7 +59,7 @@ class C5DatabaseManager:
             # F3: Subjects master table (subject information)
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS subjects (
-                    subject_id INTEGER PRIMARY KEY,
+                    subject_id TEXT PRIMARY KEY,
                     subject_name TEXT NOT NULL,
                     credits INTEGER NOT NULL,
                     category TEXT NOT NULL,
@@ -73,12 +73,6 @@ class C5DatabaseManager:
                 )
             ''')
             
-            # Add day_of_week column if it doesn't exist (for existing databases)
-            try:
-                cursor.execute('ALTER TABLE subjects ADD COLUMN day_of_week TEXT')
-            except sqlite3.OperationalError:
-                # Column already exists
-                pass
 
             # User profiles for additional information
             cursor.execute('''
@@ -478,7 +472,7 @@ class C5DatabaseManager:
 
     # Subject management methods
 
-    def add_subject(self, subject_id: int, subject_name: str, credits: int,
+    def add_subject(self, subject_id: str, subject_name: str, credits: int,
                    category: str, requirement_type: str, semester_offered: int,
                    year_offered: int, time_slot: str = '', day_of_week: str = '',
                    prerequisites: List[str] = None, description: str = '') -> bool:
@@ -506,7 +500,7 @@ class C5DatabaseManager:
             print(f"Error adding subject: {e}")
             return False
 
-    def get_subject(self, subject_id: int) -> Optional[Dict[str, Any]]:
+    def get_subject(self, subject_id: str) -> Optional[Dict[str, Any]]:
         """Get subject information from F3 (subjects table)"""
         try:
             with self.get_connection() as conn:
