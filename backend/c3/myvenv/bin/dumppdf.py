@@ -1,4 +1,4 @@
-#!/Users/yff65139/Documents/授業/高度情報演習/C3 履修処理部/myvenv/bin/python3
+#!/Users/yff65139/Documents/授業/高度情報演習/c3 履修処理部/myvenv/bin/python3
 """Extract pdf structure in XML format"""
 
 import logging
