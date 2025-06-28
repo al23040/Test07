@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f5295f4-3e40-456e-866b-25789eeea06c" name="変更" comment="C3 commit &#10;add test_app.py">
-      <change afterPath="$PROJECT_DIR$/backend/c3/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/c3/SaveCourseData.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/c3/SaveCourseData.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/c3/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/c3/api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/c3/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/c3/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/c3/tests/test_app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/c3/test_app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/c3/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/c3/utils.py" afterDir="false" />
-    </list>
+    <list default="true" id="9f5295f4-3e40-456e-866b-25789eeea06c" name="変更" comment="C3 commit &#10;add test_app.py" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -122,7 +113,7 @@
       <workItem from="1750685882113" duration="14416000" />
       <workItem from="1750742520399" duration="750000" />
       <workItem from="1750743355191" duration="5000" />
-      <workItem from="1750743595199" duration="20728000" />
+      <workItem from="1750743595199" duration="21304000" />
     </task>
     <task id="LOCAL-00001" summary="C3 commit TranscriptReader.py">
       <option name="closed" value="true" />
@@ -188,7 +179,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751100296994</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="C3 commit &#10;add test_app.py">
+      <option name="closed" value="true" />
+      <created>1751103204085</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1751103204085</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -209,7 +208,7 @@
     <SUITE FILE_PATH="coverage/Test07$pytest__test_app_py__.coverage" NAME="pytest (test_app.py 内) のカバレッジ結果" MODIFIED="1751100854126" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/c3" />
     <SUITE FILE_PATH="coverage/Test07$make_subject_csv.coverage" NAME="make_subject_csv のカバレッジ結果" MODIFIED="1750732790687" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/C3" />
     <SUITE FILE_PATH="coverage/Test07$__init__.coverage" NAME="__init__ のカバレッジ結果" MODIFIED="1751102056114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/c3" />
-    <SUITE FILE_PATH="coverage/Test07$app.coverage" NAME="app のカバレッジ結果" MODIFIED="1751102502550" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
+    <SUITE FILE_PATH="coverage/Test07$app.coverage" NAME="app のカバレッジ結果" MODIFIED="1751103066945" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
     <SUITE FILE_PATH="coverage/Test07$create_test_database.coverage" NAME="create_test_database のカバレッジ結果" MODIFIED="1750749817299" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/c3" />
   </component>
 </project>
