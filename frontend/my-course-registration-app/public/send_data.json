@@ -1,0 +1,63 @@
+{
+  "courses": [
+    {
+      "subject_name": "情報セキュリティ",
+      "code": "L0320100",
+      "category": "専門科目",
+      "requirement": "選択",
+      "credit": 2
+    },
+    {
+      "subject_name": "線形代数第１",
+      "code": "L0410100",
+      "category": "共通数理科目",
+      "requirement": "必修",
+      "credit": 2
+    }
+  ],
+  "available_courses": [
+    {
+      "subject_name": "工学英語 Ⅰ",
+      "code": "06113500",
+      "category": "言語科目",
+      "requirement": "選択必修",
+      "credit": 2
+    },
+    {
+      "subject_name": "生命倫理",
+      "code": "00508200",
+      "category": "人文社会系教養科目",
+      "requirement": "選択必修",
+      "credit": 2
+    }
+  ],
+  "credit_data": {
+    "university_common_credits": 0,
+    "common_math_credits": {
+      "compulsory": 2,
+      "elective_compulsory": 0,
+      "elective": 0
+    },
+    "language_credits": {
+      "compulsory": 0,
+      "elective_compulsory": 0,
+      "elective": 0
+    },
+    "social_sciences_credits": {
+      "compulsory": 0,
+      "elective_compulsory": 0,
+      "elective": 0
+    },
+    "major_credits": {
+      "compulsory": 0,
+      "elective_compulsory": 0,
+      "elective": 2
+    },
+    "informatics_credits": 0,
+    "PE_health_credits": {
+      "compulsory": 0,
+      "elective_compulsory": 0,
+      "elective": 0
+    }
+  }
+}

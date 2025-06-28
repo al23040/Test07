@@ -1,0 +1,137 @@
+/* src/components/W5_SubjectEditPage.css */
+.subject-edit-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  border: 1px solid #000; /* 全体の枠線 */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  padding-bottom: 20px; /* 下部の余白 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.subject-edit-container h2 {
+  width: 100%;
+  text-align: left;
+  background-color: #e0e0e0; /* ヘッダーの背景色 */
+  padding: 10px 20px;
+  box-sizing: border-box;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.subject-list-section {
+  width: calc(100% - 40px); /* 左右の余白を考慮 */
+  margin: 0 20px 20px 20px;
+  border: 1px solid #000; /* 履修した科目一覧の枠線 */
+  padding: 15px;
+  box-sizing: border-box;
+  position: relative;
+  max-height: 350px; /* 高さを制限してスクロール可能に */
+  overflow-y: auto; /* 縦方向のスクロール */
+}
+
+.subject-list-section h3 {
+  background-color: #f0f0f0;
+  padding: 8px 10px;
+  margin: -15px -15px 15px -15px; /* 親要素のパディングを相殺 */
+  border-bottom: 1px solid #000;
+  font-size: 1em;
+  text-align: center;
+}
+
+.subjects-edit-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.subjects-edit-table th,
+.subjects-edit-table td {
+  border: 1px solid #e0e0e0;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.subjects-edit-table th {
+  background-color: #f2f2f2;
+  color: #444;
+  font-weight: normal; /* フォントを太くしない */
+  font-size: 0.9em;
+}
+
+.subjects-edit-table td {
+  font-size: 0.9em;
+}
+
+.subjects-edit-table td input {
+  width: calc(100% - 10px);
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.add-subject-form {
+  display: flex;
+  width: calc(100% - 40px);
+  margin: 20px 20px 0 20px;
+  gap: 10px;
+  align-items: center;
+  border-top: 1px solid #000; /* 上部に線 */
+  padding-top: 20px; /* 上部にパディング */
+}
+
+.add-subject-form input[type="text"] {
+  padding: 8px 10px;
+  border: 1px solid #777; /* 枠線 */
+  border-radius: 3px;
+  flex-grow: 1;
+  font-size: 0.9em;
+}
+
+.add-subject-form input[name="name"] {
+  width: 200px; /* 科目名入力欄の幅を調整 */
+}
+
+.add-subject-form input[name="credits"] {
+  width: 80px; /* 単位数入力欄の幅を調整 */
+}
+
+.add-button {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 8px 20px;
+  border: 1px solid #777;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+  white-space: nowrap; /* テキストの改行を防ぐ */
+}
+
+.add-button:hover {
+  background-color: #e0e0e0;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  width: calc(100% - 40px);
+  margin-top: 30px;
+  gap: 15px;
+}
+
+.button-group button {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 10px 25px;
+  border: 1px solid #777;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+.button-group button:hover {
+  background-color: #e0e0e0;
+}
