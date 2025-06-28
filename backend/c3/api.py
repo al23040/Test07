@@ -3,6 +3,7 @@
 from flask import Flask, request, jsonify
 from datetime import datetime
 from typing import Any, Dict
+from models import get_session
 
 from backend.c3.TranscriptReader import TranscriptReader
 from backend.c3.SaveCourseData import SaveCourseData
@@ -27,7 +28,8 @@ class C3API:
         @self.app.route('/api/c3/courses/submit', methods=['GET'])
         def submit_courses():
             courses = request.get_json()
-            scd = SaveCourseData()
+            session = get_session()
+            scd = SaveCourseData(session)
             scd.submit_course_data(courses, 1)
             return jsonify({"message": "Courses saved successfully"}), 201
 

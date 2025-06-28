@@ -23,7 +23,7 @@ class Registration(Base):
 
     user_id = Column(Integer, primary_key=True)
     code = Column(String, ForeignKey('subjects.code'), primary_key=True)
-    grade = Column(String, nullable=False)
+    grade = Column(String, nullable=True)
 
     subject = relationship("Subject", back_populates="registrations")
 

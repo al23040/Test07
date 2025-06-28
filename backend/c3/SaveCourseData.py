@@ -2,6 +2,8 @@ from models import Registration
 from sqlalchemy.orm import Session
 
 class SaveCourseData:
+    def __init__(self, session: Session):
+        self.session = session
 
     def submit_course_data(self, courses: list, user_id: int):
         for course in courses:
