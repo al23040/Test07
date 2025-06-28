@@ -1,5 +1,5 @@
 from flask import Flask
-from backend.c3.api import register_c3_api  # モジュールパスは適宜修正
+from api import register_c3_api
 
 def create_app():
     app = Flask(__name__)

@@ -3,10 +3,13 @@
 from flask import Flask, request, jsonify
 from datetime import datetime
 from typing import Any, Dict
-from models import get_session
+from .models import get_session
 
 from backend.c3.TranscriptReader import TranscriptReader
 from backend.c3.SaveCourseData import SaveCourseData
+
+#from TranscriptReader import TranscriptReader
+#from SaveCourseData import SaveCourseData
 
 
 class C3API:

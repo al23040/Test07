@@ -1,4 +1,4 @@
-from models import Registration
+from .models import Registration
 from sqlalchemy.orm import Session
 
 class SaveCourseData:

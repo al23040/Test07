@@ -1,4 +1,4 @@
-from models import Subject, Registration, get_session
+from .models import Subject, Registration, get_session
 
 
 def text_replace(text: str):
