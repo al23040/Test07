@@ -1,5 +1,6 @@
 import TranscriptReader
 
+print("test!!")
 pdf_path = "./Receipt.pdf"
 def pdf_to_bytes(pdf_path):
     with open(pdf_path, "rb") as f:
