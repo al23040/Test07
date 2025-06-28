@@ -1,4 +1,5 @@
-from models import Subject, Registration
+from models import Subject, Registration, get_session
+
 
 def text_replace(text: str):
     text = text.replace("Ｒｅａｄｉｎｇ＆Ｗｒｉｔｉ", "Ｒｅａｄｉｎｇ＆Ｗｒｉｔｉｎｇ　")
@@ -11,8 +12,10 @@ def text_replace(text: str):
     return text
 
 def get_course(code):
-    course = Subject.query.filter_by(code=code).first()
+    session = get_session()
+    course = session.query(Subject).filter_by(code=code).first()
     if course:
+        session.close()
         return {
             "subject_name": course.subject_name,
             "code": course.code,
@@ -20,35 +23,38 @@ def get_course(code):
             "requirement": course.requirement,
             "credit": course.credit
         }
+
     return None
 
 def make_send_courses(courses: list):
     send_courses = []
     for course in courses:
-        send_courses.append(get_course(course["code"]))
+        course_data = get_course(course["code"])
+        if course_data is not None:
+            send_courses.append(course_data)
 
     return send_courses
 
-def make_send_available_courses(term, send_courses: list):
-    year = term.get("year")
-    semester = term.get("semester")
-
+def make_send_available_courses(semester_offered: int, year_offered: int, send_courses: list):
     base_year = 2023
-    limit_grade = year - base_year + 1
+    limit_grade = year_offered - base_year + 1
+    limit_semester = semester_offered
 
-    semester_order = {'前期': 0, '後期': 1}
-    limit_semester_order = semester_order.get(semester)
     taken_codes = set(course["code"] for course in send_courses)
 
-    all_courses = Subject.query.all()
+    session = get_session()
+    all_courses = session.query(Subject).all()
 
     send_available_courses = []
     for course in all_courses:
         if course.code in taken_codes:
             continue
 
-        course_order = (course.grade, semester_order.get(course.semester))
-        limit_order = (limit_grade, limit_semester_order)
+        course_grade = course.year_offered - base_year + 1
+        course_semester = course.semester_offered
+
+        course_order = (course_grade, course_semester)
+        limit_order = (limit_grade, limit_semester)
 
         if course_order <= limit_order:
             send_available_courses.append({

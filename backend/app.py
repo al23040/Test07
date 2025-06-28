@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from c3 import register_c3_api
 from c4 import register_c4_api
 from c5 import register_c5_api, AccountManager
+
 
 app = Flask(__name__)
 CORS(app)

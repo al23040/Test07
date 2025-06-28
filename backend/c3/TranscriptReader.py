@@ -13,6 +13,8 @@ from typing import List, Tuple
 class TranscriptReader:
     def __init__(self):
         self.term: Optional[dict] = None
+        self.semester_offered: Optional[int] = None
+        self.year_offered: Optional[int] = None
 
     def is_transcript(self, pdf_data: bytes) -> bool:
         keyword = "芝浦工業大学"
@@ -21,9 +23,9 @@ class TranscriptReader:
             words = page.extract_words()
             for word in words:
                 if word['text'] == keyword and word['x0'] < 490 and word['top'] < 35:
-                    # 成績通知表より現在の年次を取得
                     termpattern = re.compile(r"(20\d{2})年度\s*(前期|後期)")
                     found_terms: list[Tuple[int, str]] = []
+
                     for p in pdf.pages:
                         text = p.extract_text()
                         if text:
@@ -37,7 +39,8 @@ class TranscriptReader:
                             return term[0], 1 if term[1] == "前期" else 2
 
                         latest = max(found_terms, key=sort_key)
-                        self.term = {"year": latest[0], "semester": latest[1]}
+                        self.year_offered = latest[0]
+                        self.semester_offered = 1 if latest[1] == "前期" else 2
 
                     return True
         return False
@@ -68,7 +71,12 @@ class TranscriptReader:
                     })
 
             send_courses = utils.make_send_courses(courses)
-            send_available_courses = utils.make_send_available_courses(self.term, send_courses)
+            print(f"[DEBUG] send_courses = {send_courses}")
+            send_available_courses = utils.make_send_available_courses(self.semester_offered, self.year_offered, send_courses)
             make_send_credits_data = utils.make_send_credits_data(send_courses)
 
-
+            return {
+                "courses": send_courses,
+                "available_courses": send_available_courses,
+                "credit_data": make_send_credits_data
+            }
