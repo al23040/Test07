@@ -1,0 +1,161 @@
+/* src/components/W4_SubjectConfirmationPage.css */
+.subject-confirmation-container {
+  max-width: 900px;
+  margin: 40px auto;
+  border: 1px solid #000; /* 全体の枠線 */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  padding-bottom: 20px; /* 下部の余白 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.subject-confirmation-container h2 {
+  width: 100%;
+  text-align: left;
+  background-color: #e0e0e0; /* ヘッダーの背景色 */
+  padding: 10px 20px;
+  box-sizing: border-box;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.category-section-container {
+  display: flex;
+  flex-wrap: wrap; /* レスポンシブ対応 */
+  justify-content: space-between;
+  width: calc(100% - 40px); /* 左右の余白を考慮 */
+  margin: 0 20px;
+  gap: 20px; /* セクション間の余白 */
+}
+
+.category-section {
+  border: 1px solid #000;
+  padding: 15px;
+  box-sizing: border-box;
+  flex: 1; /* 均等な幅 */
+  min-width: 300px; /* 最小幅を設定 */
+  position: relative; /* スクロールバーのために */
+  max-height: 250px; /* 高さを制限してスクロール可能に */
+  overflow-y: auto; /* 縦方向のスクロール */
+}
+
+.category-section h3 {
+  background-color: #f0f0f0;
+  padding: 8px 10px;
+  margin: -15px -15px 15px -15px; /* 親要素のパディングを相殺 */
+  border-bottom: 1px solid #000;
+  font-size: 1em;
+  text-align: center;
+}
+
+.category-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-section li {
+  margin-bottom: 5px;
+  font-size: 0.95em;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 10px; /* 単位のための余白 */
+}
+
+.category-section li span:last-child {
+  white-space: nowrap; /* 単位が改行されないように */
+}
+
+.other-total-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* 下揃え */
+  width: calc(100% - 40px);
+  margin-top: 20px;
+}
+
+.other-section {
+  border: 1px solid #000;
+  padding: 15px;
+  box-sizing: border-box;
+  flex: 2; /* 必修セクションより広めに */
+  min-width: 300px;
+  position: relative;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.other-section h3 {
+  background-color: #f0f0f0;
+  padding: 8px 10px;
+  margin: -15px -15px 15px -15px;
+  border-bottom: 1px solid #000;
+  font-size: 1em;
+  text-align: center;
+}
+
+.other-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.other-section li {
+  margin-bottom: 5px;
+  font-size: 0.95em;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 10px;
+}
+
+.total-section {
+  border: 1px solid #000;
+  padding: 15px 20px;
+  box-sizing: border-box;
+  flex: 1; /* 均等な幅 */
+  min-width: 150px; /* 最小幅 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* 他のセクションと高さを合わせる */
+  margin-left: 20px; /* 左側にスペース */
+}
+
+.total-section p {
+  margin: 5px 0;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end; /* 右寄せ */
+  width: calc(100% - 40px);
+  margin-top: 30px;
+  gap: 15px; /* ボタン間のスペース */
+}
+
+.button-group button {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 10px 25px;
+  border: 1px solid #777;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+.button-group button:hover {
+  background-color: #e0e0e0;
+}
+
+.no-subjects-message {
+  text-align: center;
+  color: #cc0000;
+  font-weight: bold;
+  margin-top: 30px;
+}

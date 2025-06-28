@@ -1,0 +1,92 @@
+/* src/components/W3_GradeUploadPage.css */
+.grade-upload-container {
+  max-width: 800px;
+  margin: 40px auto;
+  border: 1px solid #000; /* 全体の枠線 */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px; /* 下部の余白 */
+}
+
+.grade-upload-container h2 {
+  width: 100%;
+  text-align: left;
+  background-color: #e0e0e0; /* ヘッダーの背景色 */
+  padding: 10px 20px;
+  box-sizing: border-box;
+  font-size: 1.2em; /* フォントサイズ調整 */
+  margin-bottom: 0; /* 下部のマージンをなくす */
+}
+
+.upload-content {
+  width: calc(100% - 40px); /* 左右の余白を考慮 */
+  margin: 20px 20px 0 20px; /* 上左右のマージン */
+  border: 1px solid #000; /* 内部コンテンツの枠線 */
+  padding: 30px 20px; /* 上下のパディングを増やす */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.upload-text {
+  text-align: center;
+  font-size: 1.1em;
+  line-height: 1.5;
+  margin-bottom: 10px; /* ボタンとの間にスペース */
+}
+
+.file-input-button {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 10px 25px;
+  border: 1px solid #777;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+
+.file-input-button:hover {
+  background-color: #e0e0e0;
+}
+
+.file-input {
+  display: none; /* 元のinput要素を隠す */
+}
+
+.next-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end; /* 右寄せ */
+  padding-top: 20px; /* 上部の余白 */
+  padding-right: 20px; /* 右の余白 */
+  box-sizing: border-box;
+}
+
+.next-button {
+  background-color: #f0f0f0; /* ボタンの背景色 */
+  color: #333;
+  padding: 10px 30px;
+  border: 1px solid #777; /* ボタンの枠線 */
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+.next-button:hover {
+  background-color: #e0e0e0;
+}
+
+.message {
+  text-align: center;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #007bff;
+}
