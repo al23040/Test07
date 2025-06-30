@@ -1,6 +1,6 @@
 // src/api.js
 
-const BASE_URL = 'http://127.0.0.1:5000/api'; // Flaskサーバーのアドレスとポートに合わせる
+const BASE_URL = './api';
 
 /**
  * ユーザーログイン (C5 API)
@@ -121,7 +121,7 @@ export const fetchFourYearPatterns = async (userId, conditions) => {
         conditions: conditions,
         // 仮のデータ。実際にはC5から取得する必要がある
         completed_courses: [], // ここにユーザーが履修済みの科目をC5から取得して渡す
-        available_courses: []  // ここに利用可能な全科目をC5から取得して渡す
+        all_courses: []  // ここに利用可能な全科目をC5から取得して渡す
       }),
     });
     if (!response.ok) {
