@@ -1,20 +1,34 @@
 // src/components/FourYearPatternList.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchFourYearPatterns } from '../api';
-import './FourYearPatternList.css'; // 必要に応じてCSSファイルを作成
+import { fetchFourYearPatterns } from '../api'; // 修正されたapi.jsからインポート
+import './FourYearPatternList.css';
 
 const FourYearPatternList = () => {
   const [patterns, setPatterns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 仮のユーザーIDと条件。実際にはログイン情報や希望条件入力画面から取得する
+  const userId = 12345; // ログインしているユーザーのIDに置き換える
+  const userConditions = {
+    min_units: 16,
+    max_units: 20,
+    preferences: ["balanced"],
+    avoid_first_period: false,
+    preferred_time_slots: [],
+    preferred_categories: [],
+    preferred_days: [],
+    avoided_days: []
+  };
+
   useEffect(() => {
     const getPatterns = async () => {
       try {
-        // patternIdなしで呼び出し、概要リストを取得
-        const data = await fetchFourYearPatterns();
-        setPatterns(data);
+        // C4 APIを呼び出す際にuserIdとconditionsを渡す
+        // FourYearPatternListは詳細ではなく、パターン概要のリストを期待
+        const data = await fetchFourYearPatterns(userId, userConditions);
+        setPatterns(data); // dataはパターンの配列を直接含むと想定
       } catch (err) {
         setError(err);
       } finally {
@@ -22,7 +36,7 @@ const FourYearPatternList = () => {
       }
     };
     getPatterns();
-  }, []);
+  }, [userId, JSON.stringify(userConditions)]);
 
   if (loading) {
     return <div className="loading">履修パターンをロード中...</div>;
@@ -42,10 +56,12 @@ const FourYearPatternList = () => {
       <div className="pattern-cards">
         {patterns.map(pattern => (
           <div key={pattern.id} className="pattern-card">
-            <h3>{pattern.name}</h3> {/* ここが「パターン1」などの通し番号になります */}
-            <p>{pattern.description}</p>
-            <p>総取得単位数: {pattern.totalUnits}</p>
-            <Link to={`/patterns/${pattern.id}`} className="detail-link">詳細を見る</Link>
+            <h3>{pattern.name}</h3>
+            <p className="pattern-description">{pattern.description}</p>
+            <p className="pattern-total-units">総取得単位数: {pattern.totalUnits}単位</p>
+            <Link to={`/patterns/${pattern.id}`} className="view-detail-button">
+              詳細を見る
+            </Link>
           </div>
         ))}
       </div>

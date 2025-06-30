@@ -1,7 +1,7 @@
 // src/components/CurrentSemesterRecommendation.js
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Linkをインポート
-import { fetchCurrentSemesterRecommendation } from '../api';
+import { Link } from 'react-router-dom';
+import { fetchCurrentSemesterRecommendation } from '../api'; // 修正されたapi.jsからインポート
 import './CurrentSemesterRecommendation.css';
 
 const CurrentSemesterRecommendation = () => {
@@ -9,13 +9,24 @@ const CurrentSemesterRecommendation = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 仮の現在の学年。実際にはユーザー情報などから取得します。
-  const currentStudentYear = 1; // ここで学年を調整してテストできます（1～4）
+  // 仮のユーザーIDと条件。実際にはログイン情報や希望条件入力画面から取得する
+  const userId = 12345; // ログインしているユーザーのIDに置き換える
+  const userConditions = {
+    min_units: 16,
+    max_units: 20,
+    preferences: ["balanced"],
+    avoid_first_period: false,
+    preferred_time_slots: [],
+    preferred_categories: [],
+    preferred_days: [],
+    avoided_days: []
+  };
 
   useEffect(() => {
     const getRecommendation = async () => {
       try {
-        const data = await fetchCurrentSemesterRecommendation(currentStudentYear);
+        // C4 APIを呼び出す際にuserIdとconditionsを渡す
+        const data = await fetchCurrentSemesterRecommendation(userId, userConditions);
         setRecommendationData(data);
       } catch (err) {
         setError(err);
@@ -24,7 +35,7 @@ const CurrentSemesterRecommendation = () => {
       }
     };
     getRecommendation();
-  }, [currentStudentYear]);
+  }, [userId, JSON.stringify(userConditions)]); // conditionsオブジェクトの変更を検知するためにstringify
 
   if (loading) {
     return <div className="loading">おすすめ履修データをロード中...</div>;
@@ -38,22 +49,39 @@ const CurrentSemesterRecommendation = () => {
     return <div className="no-data">おすすめ履修データが見つかりませんでした。</div>;
   }
 
+  // ... (既存のJSXレンダリングロジックは変わらないはず) ...
   const days = ['月', '火', '水', '木', '金'];
   const periods = ['1限', '2限', '3限', '4限', '5限'];
 
   return (
     <div className="current-semester-recommendation">
-      <h2>今学期のおすすめ履修登録</h2>
-      <h3>{recommendationData.year}年生 {recommendationData.semester}</h3>
-      <p>総単位数: {recommendationData.totalUnits}</p>
-      <p>残り単位数: {recommendationData.remainingUnits}</p>
-      <p>基本情報技術者試験内容習得率: {recommendationData.basicTechExamCompletionRate}%</p>
+      <h2>今学期のおすすめ履修</h2>
+      {recommendationData.semesterInfo && (
+        <p><strong>{recommendationData.semesterInfo}</strong></p>
+      )}
+      {recommendationData.totalCredits && (
+        <p>現在の総取得単位数: {recommendationData.totalCredits}</p>
+      )}
+      {recommendationData.remainingRequirements && (
+        <div>
+          <h4>残りの卒業要件（目安）:</h4>
+          <ul>
+            {Object.entries(recommendationData.remainingRequirements).map(([category, reqs]) => (
+              <li key={category}>
+                {category}: {Object.entries(reqs).map(([type, value]) => (
+                  <span key={type}>{type}: {value}単位 </span>
+                ))}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-      <h4>おすすめ科目:</h4>
-      {recommendationData.recommendedSubjects.length > 0 ? (
+      <h3>推奨科目:</h3>
+      {recommendationData.recommendedSubjects && recommendationData.recommendedSubjects.length > 0 ? (
         <ul>
           {recommendationData.recommendedSubjects.map(subject => (
-            <li key={subject.id}>{subject.name} ({subject.units}単位)</li>
+            <li key={subject.id}>{subject.name} ({subject.units}単位) {subject.time_slot ? `[${subject.day_of_week} ${subject.time_slot}]` : ''}</li>
           ))}
         </ul>
       ) : (

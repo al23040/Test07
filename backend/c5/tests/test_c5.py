@@ -21,7 +21,7 @@ def create_sample_courses() -> List[TakenCourse]:
     """Create sample course data for testing"""
     return [
         TakenCourse(
-            subject_id=1001,
+            subject_id="CS101",
             subject_name="プログラミング基礎",
             evaluation="A",
             credits=2,
@@ -31,7 +31,7 @@ def create_sample_courses() -> List[TakenCourse]:
             category="専門科目"
         ),
         TakenCourse(
-            subject_id=1002,
+            subject_id="MATH101",
             subject_name="微分積分学I",
             evaluation="B",
             credits=2,
@@ -41,7 +41,7 @@ def create_sample_courses() -> List[TakenCourse]:
             category="共通数理科目"
         ),
         TakenCourse(
-            subject_id=1003,
+            subject_id="ENG101",
             subject_name="英語I",
             evaluation="A",
             credits=2,
@@ -51,7 +51,7 @@ def create_sample_courses() -> List[TakenCourse]:
             category="言語科目"
         ),
         TakenCourse(
-            subject_id=1004,
+            subject_id="GEN101",
             subject_name="情報リテラシー",
             evaluation="A",
             credits=2,
@@ -61,7 +61,7 @@ def create_sample_courses() -> List[TakenCourse]:
             category="全学共通科目"
         ),
         TakenCourse(
-            subject_id=1005,
+            subject_id="PE101",
             subject_name="体育実技I",
             evaluation="A",
             credits=1,
@@ -71,7 +71,7 @@ def create_sample_courses() -> List[TakenCourse]:
             category="体育健康科目"
         ),
         TakenCourse(
-            subject_id=1006,
+            subject_id="CS201",
             subject_name="データ構造とアルゴリズム",
             evaluation="C",
             credits=2,
@@ -81,7 +81,7 @@ def create_sample_courses() -> List[TakenCourse]:
             category="専門科目"
         ),
         TakenCourse(
-            subject_id=1007,
+            subject_id="CS999",
             subject_name="失敗した科目",
             evaluation="F",
             credits=2,
@@ -284,7 +284,7 @@ def test_c5_models():
         # Test TakenCourse model
         print("\n--- TakenCourseモデルテスト ---")
         course = TakenCourse(
-            subject_id=2001,
+            subject_id="TEST001",
             subject_name="テスト科目",
             evaluation="A",
             credits=3,
@@ -301,7 +301,7 @@ def test_c5_models():
 
         # Test failed course
         failed_course = TakenCourse(
-            subject_id=2002,
+            subject_id="TEST002",
             subject_name="失敗科目",
             evaluation="F",
             credits=2,
@@ -327,7 +327,7 @@ def test_c5_models():
 
         # Test course addition
         new_course = TakenCourse(
-            subject_id=2003,
+            subject_id="TEST003",
             subject_name="追加科目",
             evaluation="B",
             credits=2,

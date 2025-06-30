@@ -44,7 +44,7 @@ class C5DatabaseManager:
                 CREATE TABLE IF NOT EXISTS registrations (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER NOT NULL,
-                    subject_id INTEGER NOT NULL,
+                    subject_id TEXT NOT NULL,
                     evaluation TEXT NOT NULL,
                     passed BOOLEAN NOT NULL,
                     semester_taken INTEGER NOT NULL,
@@ -59,7 +59,7 @@ class C5DatabaseManager:
             # F3: Subjects master table (subject information)
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS subjects (
-                    subject_id INTEGER PRIMARY KEY,
+                    subject_id TEXT PRIMARY KEY,
                     subject_name TEXT NOT NULL,
                     credits INTEGER NOT NULL,
                     category TEXT NOT NULL,
@@ -67,10 +67,12 @@ class C5DatabaseManager:
                     semester_offered INTEGER NOT NULL,
                     year_offered INTEGER NOT NULL,
                     time_slot TEXT,
+                    day_of_week TEXT,
                     prerequisites TEXT DEFAULT '[]',
                     description TEXT DEFAULT ''
                 )
             ''')
+            
 
             # User profiles for additional information
             cursor.execute('''
@@ -430,8 +432,8 @@ class C5DatabaseManager:
             cursor.execute('''
                 INSERT INTO subjects
                 (subject_id, subject_name, credits, category, requirement_type,
-                 semester_offered, year_offered, time_slot, description)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 semester_offered, year_offered, time_slot, day_of_week, description)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 registration_info.subject_id,
                 registration_info.subject_name,
@@ -441,6 +443,7 @@ class C5DatabaseManager:
                 registration_info.semester,
                 registration_info.year,
                 '',  # Default time slot
+                '',  # Default day of week
                 f'Auto-created subject for {registration_info.subject_name}'
             ))
 
@@ -452,8 +455,8 @@ class C5DatabaseManager:
             cursor.execute('''
                 INSERT INTO subjects
                 (subject_id, subject_name, credits, category, requirement_type,
-                 semester_offered, year_offered, time_slot, description)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 semester_offered, year_offered, time_slot, day_of_week, description)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 course.subject_id,
                 course.subject_name,
@@ -463,15 +466,16 @@ class C5DatabaseManager:
                 course.semester,
                 course.year,
                 '',  # Default time slot
+                '',  # Default day of week
                 f'Auto-created subject for {course.subject_name}'
             ))
 
     # Subject management methods
 
-    def add_subject(self, subject_id: int, subject_name: str, credits: int,
+    def add_subject(self, subject_id: str, subject_name: str, credits: int,
                    category: str, requirement_type: str, semester_offered: int,
-                   year_offered: int, time_slot: str = '', prerequisites: List[str] = None,
-                   description: str = '') -> bool:
+                   year_offered: int, time_slot: str = '', day_of_week: str = '',
+                   prerequisites: List[str] = None, description: str = '') -> bool:
         """Add a new subject to F3 (subjects table)"""
         try:
             with self.get_connection() as conn:
@@ -482,11 +486,11 @@ class C5DatabaseManager:
                 cursor.execute('''
                     INSERT INTO subjects
                     (subject_id, subject_name, credits, category, requirement_type,
-                     semester_offered, year_offered, time_slot, prerequisites, description)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     semester_offered, year_offered, time_slot, day_of_week, prerequisites, description)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ''', (
                     subject_id, subject_name, credits, category, requirement_type,
-                    semester_offered, year_offered, time_slot, prereq_json, description
+                    semester_offered, year_offered, time_slot, day_of_week, prereq_json, description
                 ))
 
                 conn.commit()
@@ -496,7 +500,7 @@ class C5DatabaseManager:
             print(f"Error adding subject: {e}")
             return False
 
-    def get_subject(self, subject_id: int) -> Optional[Dict[str, Any]]:
+    def get_subject(self, subject_id: str) -> Optional[Dict[str, Any]]:
         """Get subject information from F3 (subjects table)"""
         try:
             with self.get_connection() as conn:
@@ -516,6 +520,7 @@ class C5DatabaseManager:
                         'semester_offered': row['semester_offered'],
                         'year_offered': row['year_offered'],
                         'time_slot': row['time_slot'],
+                        'day_of_week': row['day_of_week'],
                         'prerequisites': json.loads(row['prerequisites']) if row['prerequisites'] else [],
                         'description': row['description']
                     }
@@ -543,6 +548,7 @@ class C5DatabaseManager:
                         'semester_offered': row['semester_offered'],
                         'year_offered': row['year_offered'],
                         'time_slot': row['time_slot'],
+                        'day_of_week': row['day_of_week'],
                         'prerequisites': json.loads(row['prerequisites']) if row['prerequisites'] else [],
                         'description': row['description']
                     }

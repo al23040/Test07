@@ -93,7 +93,7 @@
 | フィールド | 主キー | 説明 | 型 | 範囲 |
 |------------|--------|------|-----|------|
 | user_id | ◌ | ユーザ識別番号 | INTEGER | FK to F1 |
-| subject_id | ◌ | 科目識別ID | INTEGER | FK to F3 |
+| subject_id | ◌ | 科目識別ID | TEXT | FK to F3 |
 | evaluation | | 科目評価文字 | TEXT | A+,A,B,C,F,X |
 | passed | | 合否状態 | BOOLEAN | |
 | semester_taken | | 履修学期 | INTEGER | 1,2 |
@@ -103,7 +103,7 @@
 #### F3: 科目情報 (subjects table) - 科目マスタ
 | フィールド | 主キー | 説明 | 型 | 範囲 |
 |------------|--------|------|-----|------|
-| subject_id | ○ | 科目識別ID | INTEGER | |
+| subject_id | ○ | 科目識別ID | TEXT | |
 | subject_name | | 科目名 | TEXT | |
 | credits | | 単位数 | INTEGER | |
 | category | | 科目カテゴリ | TEXT | |
@@ -157,7 +157,7 @@ POST /api/c5/users/12345/courses
 {
   "courses": [
     {
-      "subject_id": 1001,
+      "subject_id": "CS101",
       "subject_name": "プログラミング基礎",
       "evaluation": "A",
       "credits": 2,

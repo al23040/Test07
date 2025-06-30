@@ -30,7 +30,7 @@ class GradeType(Enum):
 @dataclass
 class TakenCourse:
     """Enhanced TakenCourse class according to specifications"""
-    subject_id: int
+    subject_id: str
     subject_name: str
     evaluation: str  # Grade (A, B, C, F, etc.)
     credits: int
@@ -100,7 +100,7 @@ class UserInfo:
         self.updated_at = datetime.now()
         return True
 
-    def remove_course(self, subject_id: int) -> bool:
+    def remove_course(self, subject_id: str) -> bool:
         """Remove a course from user's record"""
         for i, course in enumerate(self.taken_courses):
             if course.subject_id == subject_id:
@@ -141,7 +141,7 @@ class UserAccount:
 class CourseRegistrationInfo:
     """Course registration information"""
     user_id: int
-    subject_id: int
+    subject_id: str
     subject_name: str
     evaluation: str
     credits: int
@@ -209,6 +209,6 @@ class UserStatistics:
 
 # Type aliases for better code readability
 UserId = int
-SubjectId = int
+SubjectId = str
 CourseData = Dict[str, Any]
 RegistrationResult = Dict[str, Any]
