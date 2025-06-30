@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
+
+from c3 import register_c3_api
 from c4 import register_c4_api
 from c5 import register_c5_api, AccountManager
 import os
@@ -11,6 +13,7 @@ CORS(app)
 account_manager = AccountManager()
 
 # Register API endpoints
+c3_api = register_c3_api(app)
 c4_api = register_c4_api(app)  # C4 Condition Processing
 c5_api = register_c5_api(app)  # C5 Account Management
 
@@ -72,4 +75,4 @@ def serve_react_app(path):
         return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
