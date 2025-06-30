@@ -5,12 +5,8 @@ from datetime import datetime
 from typing import Any, Dict
 from .models import get_session
 
-from backend.c3.TranscriptReader import TranscriptReader
-from backend.c3.SaveCourseData import SaveCourseData
-
-#from TranscriptReader import TranscriptReader
-#from SaveCourseData import SaveCourseData
-
+from c3.TranscriptReader import TranscriptReader
+from c3.SaveCourseData import SaveCourseData
 
 class C3API:
     def __init__(self, app: Flask):
@@ -21,16 +17,19 @@ class C3API:
         @self.app.route('/api/c3/upload-pdf', methods=['POST'])
         def upload_pdf():
             file = request.files.get('file')
+            pdf_bytes = file.read()
             tr = TranscriptReader()
-            if tr.is_transcript(file) == False:
+            if tr.is_transcript(pdf_bytes) == False:
                 return jsonify({'error': 'Invalid file.'}), 400
 
-            send_data = tr.get_course_data(file)
+            send_data = tr.get_course_data(pdf_bytes)
             return jsonify(send_data), 200
 
-        @self.app.route('/api/c3/courses/submit', methods=['GET'])
+        @self.app.route('/api/c3/courses/submit', methods=['POST'])
         def submit_courses():
-            courses = request.get_json()
+            data = request.get_json()
+            courses = data.get('courses', [])
+            print(courses)
             session = get_session()
             scd = SaveCourseData(session)
             scd.submit_course_data(courses, 1)

@@ -1,6 +1,5 @@
 from .models import Subject, Registration, get_session
 
-
 def text_replace(text: str):
     text = text.replace("Ｒｅａｄｉｎｇ＆Ｗｒｉｔｉ", "Ｒｅａｄｉｎｇ＆Ｗｒｉｔｉｎｇ　")
     text = text.replace("Ｌｉｓｔｅｎｉｎｇ＆Ｓｐｅ", "Ｌｉｓｔｅｎｉｎｇ＆Ｓｐｅａｋｉｎｇ　")
@@ -39,6 +38,7 @@ def make_send_available_courses(semester_offered: int, year_offered: int, send_c
     base_year = 2023
     limit_grade = year_offered - base_year + 1
     limit_semester = semester_offered
+    print(limit_grade, limit_semester)
 
     taken_codes = set(course["code"] for course in send_courses)
 
@@ -50,9 +50,8 @@ def make_send_available_courses(semester_offered: int, year_offered: int, send_c
         if course.code in taken_codes:
             continue
 
-        course_grade = course.year_offered - base_year + 1
-        course_semester = course.semester_offered
-
+        course_grade = int(course.year_offered)
+        course_semester = int(course.semester_offered)
         course_order = (course_grade, course_semester)
         limit_order = (limit_grade, limit_semester)
 
@@ -71,7 +70,6 @@ def make_send_credits_data(send_courses):
     university_common_credits = 0
     informatics_credits = 0
 
-    # 区分ごとの辞書（初期値0）
     common_math_credits = {
         "compulsory": 0,
         "elective_compulsory": 0,
@@ -96,7 +94,13 @@ def make_send_credits_data(send_courses):
         "elective": 0
     }
 
-    PE_health_credits = {
+    pe_health_credits = {
+        "compulsory": 0,
+        "elective_compulsory": 0,
+        "elective": 0
+    }
+
+    common_engineering_credits = {
         "compulsory": 0,
         "elective_compulsory": 0,
         "elective": 0
@@ -144,11 +148,19 @@ def make_send_credits_data(send_courses):
 
         elif category == "体育健康科目":
             if requirement == "必修":
-                PE_health_credits["compulsory"] += credit
+                pe_health_credits["compulsory"] += credit
             elif requirement == "選択必修":
-                PE_health_credits["elective_compulsory"] += credit
+                pe_health_credits["elective_compulsory"] += credit
             elif requirement == "選択":
-                PE_health_credits["elective"] += credit
+                pe_health_credits["elective"] += credit
+
+        elif category == "共通工学系教養科目":
+            if requirement == "必修":
+                pe_health_credits["compulsory"] += credit
+            elif requirement == "選択必修":
+                pe_health_credits["elective_compulsory"] += credit
+            elif requirement == "選択":
+                pe_health_credits["elective"] += credit
 
         elif category == "情報科目":
             informatics_credits += credit
@@ -160,8 +172,6 @@ def make_send_credits_data(send_courses):
         "social_sciences_credits": social_sciences_credits,
         "major_credits": major_credits,
         "informatics_credits": informatics_credits,
-        "PE_health_credits": PE_health_credits
+        "PE_health_credits": pe_health_credits,
+        "common_engineering_credits": common_engineering_credits
     }
-
-
-

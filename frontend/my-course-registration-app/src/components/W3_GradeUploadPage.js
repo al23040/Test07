@@ -25,7 +25,7 @@ function GradeUploadPage() {
       const formData = new FormData();
       formData.append('file', file);
 
-const response = await fetch('http://localhost:5000/api/upload-pdf', {
+const response = await fetch('http://localhost:5000/api/c3/upload-pdf', {
   method: 'POST',
   body: formData
 });
@@ -53,20 +53,20 @@ const response = await fetch('http://localhost:5000/api/upload-pdf', {
       // ============================
       // ↓ デバッグ用：ローカルの send_data.json を読み込む
       // ============================
-      try {
-        const localResponse = await fetch('/send_data.json');
-        if (!localResponse.ok) throw new Error('send_data.json 読み込み失敗');
-        const localJson = await localResponse.json();
-
-        localStorage.setItem('parsedCourses', JSON.stringify(localJson.courses));
-        localStorage.setItem('availableCourses', JSON.stringify(localJson.available_courses));
-        localStorage.setItem('creditData', JSON.stringify(localJson.credit_data));
-
-        setMessage('ローカルの send_data.json を読み込みました。');
-      } catch (localErr) {
-        console.error('ローカルJSON読み込みにも失敗:', localErr);
-        setMessage('ローカルのデータ読み込みにも失敗しました。');
-      }
+      // try {
+      //   const localResponse = await fetch('/send_data.json');
+      //   if (!localResponse.ok) throw new Error('send_data.json 読み込み失敗');
+      //   const localJson = await localResponse.json();
+      //
+      //   localStorage.setItem('parsedCourses', JSON.stringify(localJson.courses));
+      //   localStorage.setItem('availableCourses', JSON.stringify(localJson.available_courses));
+      //   localStorage.setItem('creditData', JSON.stringify(localJson.credit_data));
+      //
+      //   setMessage('ローカルの send_data.json を読み込みました。');
+      // } catch (localErr) {
+      //   console.error('ローカルJSON読み込みにも失敗:', localErr);
+      //   setMessage('ローカルのデータ読み込みにも失敗しました。');
+      // }
     } finally {
       setLoading(false);
     }
