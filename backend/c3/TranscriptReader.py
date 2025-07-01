@@ -6,7 +6,7 @@ import logging
 
 logging.getLogger("pdfminer").setLevel(logging.ERROR)
 import re
-import utils
+from . import utils
 from typing import List, Tuple
 
 

@@ -57,20 +57,6 @@ function SubjectConfirmationPage() {
       console.error('送信エラー:', err);
       setMessage('送信に失敗しました。data.json をダウンロードします。');
 
-      // ============================
-      // ↓ デバッグ用：ローカルに .json をダウンロード
-      // ============================
-      /*const blob = new Blob([JSON.stringify(payload, null, 2)], {
-        type: 'application/json'
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'data.json';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);*/
     }
   };
 

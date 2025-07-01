@@ -1,7 +1,7 @@
 # C4 条件処理部 (Condition Processing Component) 実装完了
 
 ## 概要
-履修登録補助システムのC4コンポーネント（条件処理部）を仕様書に基づいて完全実装しました。
+履修登録補助システムのC4コンポーネント（条件処理部）を仕様書に基づいて完全実装し、日曜日別スケジューリング機能とフロントエンド互換APIフォーマットを追加実装しました。
 
 ## 実装されたファイル
 
@@ -12,6 +12,8 @@
   - 4年間の履修登録パターン生成
   - 卒業要件計算と残単位数管理
   - ユーザ条件に基づく科目フィルタリング
+  - **NEW**: 曜日別スケジューリング対応
+  - **NEW**: 曜日指定・回避機能
 
 ### 2. `registration_pattern_calculator.py`
 - **M1 履修パターン算出部**: 4年間の履修パターン計算
@@ -29,21 +31,26 @@
   - 条件の優先度付けと複合条件処理
   - パターン重複除去とランキング
 
-### 4. `c4_api.py`
+### 4. `api.py`
 - **HTTP API インターフェース**: Flaskとの統合
 - **エンドポイント**:
   - `/api/c4/current-semester-recommendation` - 今学期推奨
   - `/api/c4/four-year-patterns` - 4年パターン
   - `/api/c4/condition-based-recommendation` - 条件ベース推奨
   - `/api/c4/avoid-first-period` - 1限回避専用
+- **NEW機能**:
+  - フロントエンド互換レスポンス形式
+  - 曜日別時間割フォーマット対応
+  - 日本語曜日名・時限名対応（月火水木金・1限-5限）
 
-### 5. `sample_data.py`
+### 5. `tests/sample_data.py`
 - **テストデータ生成**: 包括的な科目カタログ
 - **データ内容**:
   - 4年間38科目の完全な科目体系
   - 6つのカテゴリ別科目（専門、数理、言語、共通、体育、情報）
   - 前提科目関係の定義
   - 卒業要件設定
+  - **NEW**: 各科目に曜日情報付与（月〜金に分散配置）
 
 ## 実装された機能
 
@@ -65,12 +72,20 @@
 - **多様な履修戦略**: 標準、集中、分散、軽負荷、研究重視パターン
 - **動的フィルタリング**: リアルタイムでの条件適用
 - **最適化アルゴリズム**: 条件適合度スコアリングとランキング
+- **NEW: 曜日別スケジューリング**:
+  - 希望曜日指定機能（月〜日から選択）
+  - 避けたい曜日指定機能
+  - 曜日制約を考慮した科目推奨
 
 ### ✅ データ構造とアルゴリズム
 - **Course, UserConditions, SuggestedCoursePattern, PlanPattern** データクラス
-- **CourseCategory, RequirementType** 列挙型定義
+- **CourseCategory, RequirementType, DayOfWeek** 列挙型定義
 - **卒業要件管理**: カテゴリ別必修・選択単位数追跡
 - **前提科目チェック**: 履修順序制約の自動処理
+- **NEW: 曜日データ管理**: 
+  - DayOfWeek列挙型（月火水木金土日）
+  - 科目-曜日マッピング
+  - 曜日制約フィルタリング
 
 ## 統合テスト結果
 
@@ -89,7 +104,7 @@ C4 条件処理部 総合テスト完了
 
 ## API使用例
 
-### 今学期推奨取得
+### 今学期推奨取得（曜日指定対応）
 ```bash
 POST /api/c4/current-semester-recommendation
 {
@@ -98,21 +113,73 @@ POST /api/c4/current-semester-recommendation
     "min_units": 16,
     "max_units": 20,
     "preferences": ["balanced"],
-    "avoid_first_period": false
+    "avoid_first_period": false,
+    "preferred_days": ["月", "水", "金"],
+    "avoided_days": ["土", "日"]
   },
   "completed_courses": [...],
   "available_courses": [...]
 }
 ```
 
-### 1限回避パターン取得
+**レスポンス形式（フロントエンド互換）:**
+```json
+{
+  "totalUnits": 124,
+  "remainingUnits": 16,
+  "basicTechExamCompletionRate": 85,
+  "recommendedSubjects": [
+    {
+      "id": "CS101",
+      "name": "プログラミング基礎",
+      "units": 2,
+      "category": "専門科目",
+      "semester": "前期"
+    }
+  ],
+  "currentSemesterSchedule": {
+    "月": {"1限": null, "2限": "プログラミング基礎", ...},
+    "火": {"1限": null, "2限": null, ...},
+    ...
+  },
+  "year": 1,
+  "semester": "前期"
+}
+```
+
+### 4年間パターン取得（曜日制約対応）
 ```bash
-POST /api/c4/avoid-first-period
+POST /api/c4/four-year-patterns
 {
   "user_id": 12345,
-  "conditions": {...},
+  "pattern_id": "pattern1",  // 特定パターン取得時
+  "conditions": {
+    "preferred_days": ["月", "水", "金"],
+    "avoided_days": ["土"]
+  },
   "completed_courses": [...],
-  "available_courses": [...]
+  "all_courses": [...]
+}
+```
+
+**レスポンス形式（特定パターン詳細）:**
+```json
+{
+  "id": "pattern1",
+  "name": "パターン1",
+  "description": "バランス型 - 各学期に均等に科目を配置",
+  "totalUnits": 124,
+  "semesters": [
+    {
+      "year": 1,
+      "semester": "前期",
+      "schedule": {
+        "月": {"1限": null, "2限": "プログラミング基礎", ...},
+        "火": {"1限": null, "2限": "情報技術概論", ...},
+        ...
+      }
+    }
+  ]
 }
 ```
 
@@ -125,8 +192,13 @@ POST /api/c4/avoid-first-period
 
 ### データフォーマット互換性
 - JSON形式でのHTTP通信対応
-- フロントエンド (React) との完全互換
-- データベース (C5) との連携準備完了
+- **フロントエンド (React) との完全互換**
+  - 時間割表示形式（曜日-時限マトリックス）
+  - 日本語曜日名・時限名対応
+  - パターンIDとサマリー情報分離対応
+- **データベース (C5) との連携準備完了**
+  - 曜日情報データベーススキーマ対応
+  - day_of_week列追加済み
 
 ## 技術仕様
 
@@ -143,11 +215,32 @@ POST /api/c4/avoid-first-period
 - **拡張性**: 新条件・新戦略の容易な追加
 - **テスタビリティ**: 包括的なユニット・統合テスト
 
-## C4実装完了宣言
+## C4実装完了宣言 + 追加機能実装
 
 ✅ **仕様書要求事項100%実装完了**  
 ✅ **API統合完了**  
 ✅ **テスト検証完了**  
-✅ **他コンポーネント連携準備完了**
+✅ **他コンポーネント連携準備完了**  
+✅ **NEW: 曜日別スケジューリング機能実装完了**  
+✅ **NEW: フロントエンド互換APIフォーマット実装完了**  
+✅ **NEW: データベーススキーマ拡張完了**
 
-C4 条件処理部の実装が完全に完了しました。
+## 最新実装内容サマリー
+
+### 曜日別スケジューリング機能
+- **DayOfWeek列挙型**: 月火水木金土日対応
+- **曜日制約フィルタリング**: preferred_days / avoided_days
+- **時間割フォーマット**: 曜日-時限マトリックス表示
+- **日本語対応**: 月火水木金・1限-5限
+
+### フロントエンド互換性
+- **今学期推奨API**: 完全にfrontend/src/api.js仕様準拠
+- **4年間パターンAPI**: パターンサマリー/詳細分離対応
+- **時間割レスポンス**: 日本語曜日名・時限名でのスケジュール出力
+
+### データベース連携
+- **C5データベース拡張**: subjects.day_of_week列追加
+- **後方互換性**: 既存データベースでも動作
+- **完全統合**: Course ↔ Database ↔ API の一貫性確保
+
+C4 条件処理部の実装が完全に完了し、さらに曜日別スケジューリング機能とフロントエンド完全互換性を追加実装しました。

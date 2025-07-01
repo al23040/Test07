@@ -4,25 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f5295f4-3e40-456e-866b-25789eeea06c" name="変更" comment="C3 commit &#10;add test_app.py">
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/public/send_data.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W3_GradeUploadPage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W3_GradeUploadPage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W4_SubjectConfirmationPage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W4_SubjectConfirmationPage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W5_SubjectEditPage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W5_SubjectEditPage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W7_PatternCard.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W7_PatternCard.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W7_PatternDisplay.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W7_PatternDisplay.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W8_CurrentSemesterRecommendation.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W8_CurrentSemesterRecommendation.js" afterDir="false" />
+    <list default="true" id="9f5295f4-3e40-456e-866b-25789eeea06c" name="変更" comment="C3 commit &#10;add test.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/c3/Receipt.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/c3/TranscriptReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/c3/TranscriptReader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/c3/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/c3/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/c3/subjects.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backend/c3/subjects.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/c3/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/c3/test_app.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/c3/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/c3/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/my-course-registration-app/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/my-course-registration-app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/my-course-registration-app/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/my-course-registration-app/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W3_GradeUploadPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W3_GradeUploadPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W4_SubjectConfirmationPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/my-course-registration-app/src/components/W4_SubjectConfirmationPage.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,29 +72,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python テスト.pytest (test_app.py 内).executor": "Run",
-    "Python.__init__.executor": "Run",
-    "Python.app.executor": "Run",
-    "Python.create_test_database.executor": "Run",
-    "Python.make_subject_csv.executor": "Run",
-    "Python.models.executor": "Run",
-    "Python.test.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "c3__test をマージ中",
-    "last_opened_file_path": "/Users/yff65139/code/Test07/backend/c3",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python テスト.pytest (test_app.py 内).executor&quot;: &quot;Run&quot;,
+    &quot;Python.__init__.executor&quot;: &quot;Run&quot;,
+    &quot;Python.api.executor&quot;: &quot;Run&quot;,
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;Python.create_test_database.executor&quot;: &quot;Run&quot;,
+    &quot;Python.make_subject_csv.executor&quot;: &quot;Run&quot;,
+    &quot;Python.models.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;c3__test&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/yff65139/code/Test07/backend/c3&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/backend/c3" />
@@ -137,6 +132,8 @@
       <workItem from="1751104043211" duration="200000" />
       <workItem from="1751104246788" duration="241000" />
       <workItem from="1751105450611" duration="28000" />
+      <workItem from="1751105731545" duration="5499000" />
+      <workItem from="1751288502139" duration="2091000" />
     </task>
     <task id="LOCAL-00001" summary="C3 commit TranscriptReader.py">
       <option name="closed" value="true" />
@@ -218,7 +215,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751103362425</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="C3 commit &#10;add test.py">
+      <option name="closed" value="true" />
+      <created>1751105791798</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1751105791798</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -231,15 +236,17 @@
     <MESSAGE value="C3 commit TranscriptReader.py&#10;add SaveCourseData.py, TranscriptReader.py, utils.py" />
     <MESSAGE value="C3 commit &#10;add test tool" />
     <MESSAGE value="C3 commit &#10;add test_app.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="C3 commit &#10;add test_app.py" />
+    <MESSAGE value="C3 commit &#10;add test.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="C3 commit &#10;add test.py" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Test07$test.coverage" NAME="test のカバレッジ結果" MODIFIED="1751086386987" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/c3" />
+    <SUITE FILE_PATH="coverage/Test07$test.coverage" NAME="test のカバレッジ結果" MODIFIED="1751289603933" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/c3" />
     <SUITE FILE_PATH="coverage/Test07$models.coverage" NAME="models のカバレッジ結果" MODIFIED="1751084259045" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/c3" />
+    <SUITE FILE_PATH="coverage/Test07$api.coverage" NAME="api のカバレッジ結果" MODIFIED="1751289543246" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/c3" />
     <SUITE FILE_PATH="coverage/Test07$pytest__test_app_py__.coverage" NAME="pytest (test_app.py 内) のカバレッジ結果" MODIFIED="1751100854126" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/c3" />
     <SUITE FILE_PATH="coverage/Test07$make_subject_csv.coverage" NAME="make_subject_csv のカバレッジ結果" MODIFIED="1750732790687" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/C3" />
     <SUITE FILE_PATH="coverage/Test07$__init__.coverage" NAME="__init__ のカバレッジ結果" MODIFIED="1751102056114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/c3" />
-    <SUITE FILE_PATH="coverage/Test07$app.coverage" NAME="app のカバレッジ結果" MODIFIED="1751103066945" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
+    <SUITE FILE_PATH="coverage/Test07$app.coverage" NAME="app のカバレッジ結果" MODIFIED="1751288929407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
     <SUITE FILE_PATH="coverage/Test07$create_test_database.coverage" NAME="create_test_database のカバレッジ結果" MODIFIED="1750749817299" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/c3" />
   </component>
 </project>
