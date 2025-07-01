@@ -1,10 +1,10 @@
-// src/components/CurrentSemesterRecommendation.js
+// src/components/W8_CurrentSemesterRecommendation.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchCurrentSemesterRecommendation } from '../api'; // 修正されたapi.jsからインポート
-import './CurrentSemesterRecommendation.css';
+import './W8_CurrentSemesterRecommendation.css';
 
-const CurrentSemesterRecommendation = () => {
+const W8_CurrentSemesterRecommendation = () => {
   const [recommendationData, setRecommendationData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -123,4 +123,4 @@ const CurrentSemesterRecommendation = () => {
   );
 };
 
-export default CurrentSemesterRecommendation;
+export default W8_CurrentSemesterRecommendation;

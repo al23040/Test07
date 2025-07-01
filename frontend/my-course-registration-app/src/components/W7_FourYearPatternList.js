@@ -1,10 +1,10 @@
-// src/components/FourYearPatternList.js
+// src/components/W7_FourYearPatternList.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchFourYearPatterns } from '../api'; // 修正されたapi.jsからインポート
-import './FourYearPatternList.css';
+import './W7_FourYearPatternList.css';
 
-const FourYearPatternList = () => {
+const W7_FourYearPatternList = () => {
   const [patterns, setPatterns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -69,4 +69,4 @@ const FourYearPatternList = () => {
   );
 };
 
-export default FourYearPatternList;
+export default W7_FourYearPatternList;

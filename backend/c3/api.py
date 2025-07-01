@@ -29,10 +29,10 @@ class C3API:
         def submit_courses():
             data = request.get_json()
             courses = data.get('courses', [])
-            print(courses)
+            user_id = data.get('user_id')
             session = get_session()
             scd = SaveCourseData(session)
-            scd.submit_course_data(courses, 1)
+            scd.submit_course_data(courses, user_id)
             return jsonify({"message": "Courses saved successfully"}), 201
 
 def register_c3_api(app: Flask) -> C3API:

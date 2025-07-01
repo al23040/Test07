@@ -1,10 +1,10 @@
-// src/components/FourYearPatternDetail.js
+// src/components/W7_FourYearPatternDetail.js
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchFourYearPatterns } from '../api';
-import './FourYearPatternDetail.css';
+import './W7_FourYearPatternDetail.css';
 
-const FourYearPatternDetail = () => {
+const W7_FourYearPatternDetail = () => {
   const { patternId } = useParams();
   const [patternDetail, setPatternDetail] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -110,4 +110,4 @@ const FourYearPatternDetail = () => {
   );
 };
 
-export default FourYearPatternDetail;
+export default W7_FourYearPatternDetail;
