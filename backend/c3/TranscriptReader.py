@@ -21,6 +21,7 @@ class TranscriptReader:
         with pdfplumber.open(BytesIO(pdf_data)) as pdf:
             page = pdf.pages[0]
             words = page.extract_words()
+            full_text =
             for word in words:
                 if word['text'] == keyword and word['x0'] < 490 and word['top'] < 35:
                     termpattern = re.compile(r"(20\d{2})年度\s*(前期|後期)")
@@ -41,7 +42,6 @@ class TranscriptReader:
                         latest = max(found_terms, key=sort_key)
                         self.year_offered = latest[0]
                         self.semester_offered = 1 if latest[1] == "前期" else 2
-
 
 
                     return True
