@@ -4,7 +4,7 @@ on: [ push, pull_request ]
 
 jobs:
   ci:
-    name: Docker Build
+    name: Build and test
     runs-on: ubuntu-latest
 
     steps:
@@ -23,14 +23,6 @@ jobs:
         run: |
           # Test if application responds
           curl -f http://localhost:3000 || exit 1
-
-      - name: Test key endpoints
-        run: |
-          # Test static files are served (React app)
-          curl -f -s http://localhost:3000/static/ > /dev/null || echo "Static endpoint not available"
-
-          # Test API health (if available)
-          curl -f -s http://localhost:3000/api/health > /dev/null || echo "API health endpoint not available"
 
       - name: Clean up
         run: docker compose down
