@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>新規登録</title>
+  <link rel="stylesheet" href="SignUp.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="form-container">
+      <h2>新規登録</h2>
+
+      <div>
+        <label for="reg-id">学籍番号</label>
+        <input id="reg-id" type="text" placeholder="例: 12345">
+        <small>※5桁の半角数字（MSゴシック）</small>
+      </div>
+
+      <div>
+        <label for="reg-pass">パスワード</label>
+        <input id="reg-pass" type="password">
+        <small>※半角英字+数字（MSゴシック）8文字以上64文字以下</small>
+      </div>
+
+      <div>
+        <label for="reg-confirm">確認用</label>
+        <input id="reg-confirm" type="password">
+        <small>※8文字以上の半角の英数字を複合した物</small>
+      </div>
+
+      <button onclick="RegisterMainInput()">登録</button>
+      <!--<a href="Login.html">W1へ画面遷移</a>-->
+      <p id="reg-error" class="error"></p>
+    </div>
+  </div>
+
+  <script src="SignUp.js"></script>
+</body>
+</html>
+
+
+
+<!--<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>新規登録画面</title>
+  <link rel="stylesheet" href="SignUp.css">
+</head>
+<body>
+  <div class="screen">
+    <h2>新規登録</h2>
+    <input id="reg-id" type="text" placeholder="学籍番号">
+    <input id="reg-pass" type="password" placeholder="パスワード">
+    <input id="reg-confirm" type="password" placeholder="確認用">
+    <button onclick="register()">登録</button>
+    <a href="Login.html">ログイン画面へ</a>
+    <p id="reg-error" class="error"></p>
+  </div>
+  <script src="SignUp.js"></script>
+</body>
+</html>-->

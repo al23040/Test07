@@ -1,0 +1,182 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'MS Gothic', monospace;
+  background-color: #f8f8f8;
+}
+
+.screen {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-container {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+label {
+  font-size: 12px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #aaa;
+  outline: none;
+  font-family: 'MS Gothic', monospace;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: 'MS Gothic', monospace;
+  width: 100%;
+}
+
+a {
+  font-size: 12px;
+  text-align: left;
+  display: block;
+  margin-top: 10px;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+/*html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'MS Gothic', sans-serif;
+}
+
+.screen {
+  height: 100%;
+  width: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* 縦中央 
+  align-items: center;      /* 横中央 
+  gap: 10px;
+}
+
+input, button {
+  width: 450px;
+  padding: 10px;
+  font-size: 14px;
+  font-family: 'MS Gothic', sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  font-size: 12px;
+  text-align: left;
+  display: block;
+  width: 450px;
+  margin-top: 5px;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+*/
+
+/*body {
+  font-family: 'MS Gothic', sans-serif;
+  background: #f8f8f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.screen {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background: #fff;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input {
+  font-family: 'MS Gothic', sans-serif;
+  font-size: 14px;
+  padding: 5px;
+}
+
+button {
+  font-size: 14px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+a {
+  font-size: 12px;
+  text-align: right;
+  display: block;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+*/
+
+
+/*body {
+  background: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.ui {
+  width: 320px;
+  height: 340px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  position: relative;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.ui::before {
+  content: "ログイン画面\n\nユーザーID（5桁）:\n[     ]\n\nパスワード:\n[     ]\n\n[ ログイン ]\n\n→ 新規登録はこちら";
+  white-space: pre-wrap;
+  display: block;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #333;
+}*/
