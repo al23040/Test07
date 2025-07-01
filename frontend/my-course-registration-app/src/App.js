@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import GradeUploadPage from './components/W3_GradeUploadPage';
 import SubjectConfirmationPage from './components/W4_SubjectConfirmationPage';
 import SubjectEditPage from './components/W5_SubjectEditPage';
-import PatternDisplay from './components/W7_PatternDisplay'; // W7コンポーネントをインポート
-import CurrentSemesterRecommendation from './components/W8_CurrentSemesterRecommendation'; // W8コンポーネントをインポート
+import PatternDisplay from './components/FourYearPatternList'; // W7コンポーネントをインポート
+import CurrentSemesterRecommendation from './components/CurrentSemesterRecommendation'; // W8コンポーネントをインポート
 import './App.css'; // グローバルなスタイル
 
 function App() {
