@@ -42,6 +42,8 @@ class TranscriptReader:
                         self.year_offered = latest[0]
                         self.semester_offered = 1 if latest[1] == "前期" else 2
 
+
+
                     return True
         return False
 
