@@ -1,12 +1,15 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
+import Login from './components/W1_Login';
+import SignUp from './components/W2_SignUp';
 import GradeUploadPage from './components/W3_GradeUploadPage';
 import SubjectConfirmationPage from './components/W4_SubjectConfirmationPage';
 import SubjectEditPage from './components/W5_SubjectEditPage';
-import PatternDisplay from './components/W7_PatternDisplay'; // W7コンポーネントをインポート
-import CurrentSemesterRecommendation from './components/W8_CurrentSemesterRecommendation'; // W8コンポーネントをインポート
-import './App.css'; // グローバルなスタイル
+import PatternDisplay from './components/W7_FourYearPatternList';
+import CurrentSemesterRecommendation from './components/W8_CurrentSemesterRecommendation';
+import './App.css';
 
 function App() {
   return (
@@ -14,32 +17,25 @@ function App() {
       <div className="App">
         <nav className="main-nav">
           <ul>
-            <li>
-              <Link to="/grade-upload">W3 成績通知書アップロード</Link>
-            </li>
-            <li>
-              <Link to="/subject-confirmation">W4 履修科目確認</Link>
-            </li>
-            <li>
-              <Link to="/subject-edit">W5 履修科目編集</Link>
-            </li>
-            <li>
-              <Link to="/patterns">W7 履修パターン表示</Link> {/* W7へのリンクを追加 */}
-            </li>
-            <li>
-              <Link to="/current-semester-recommendation">W8 今学期のおすすめ</Link> {/* W8へのリンクを追加 */}
-            </li>
+            <li><Link to="/login">ログイン</Link></li>
+            <li><Link to="/register">登録</Link></li>
+            <li><Link to="/grade-upload">成績アップロード</Link></li>
+            <li><Link to="/subject-confirmation">履修科目確認</Link></li>
+            <li><Link to="/subject-edit">履修科目編集</Link></li>
+            <li><Link to="/patterns">履修パターン表示</Link></li>
+            <li><Link to="/current-semester-recommendation">今学期のおすすめ</Link></li>
           </ul>
         </nav>
 
         <div className="content">
           <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<SignUp />} />
             <Route path="/grade-upload" element={<GradeUploadPage />} />
             <Route path="/subject-confirmation" element={<SubjectConfirmationPage />} />
             <Route path="/subject-edit" element={<SubjectEditPage />} />
-            <Route path="/patterns" element={<PatternDisplay />} /> {/* W7のルートを追加 */}
-            <Route path="/current-semester-recommendation" element={<CurrentSemesterRecommendation />} /> {/* W8のルートを追加 */}
-            {/* デフォルトルート（任意のページにリダイレクトまたはホーム画面表示） */}
+            <Route path="/patterns" element={<PatternDisplay />} />
+            <Route path="/current-semester-recommendation" element={<CurrentSemesterRecommendation />} />
             <Route path="/" element={<Home />} />
           </Routes>
         </div>
