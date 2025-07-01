@@ -7,9 +7,9 @@ import SignUp from './components/W2_SignUp';
 import GradeUploadPage from './components/W3_GradeUploadPage';
 import SubjectConfirmationPage from './components/W4_SubjectConfirmationPage';
 import SubjectEditPage from './components/W5_SubjectEditPage';
-import PatternDisplay from './components/W7_FourYearPatternList';
-import CurrentSemesterRecommendation from './components/W8_CurrentSemesterRecommendation';
-import './App.css';
+import PatternDisplay from './components/FourYearPatternList'; // W7コンポーネントをインポート
+import CurrentSemesterRecommendation from './components/CurrentSemesterRecommendation'; // W8コンポーネントをインポート
+import './App.css'; // グローバルなスタイル
 
 function App() {
   return (
