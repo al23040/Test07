@@ -42,7 +42,7 @@ function SubjectConfirmationPage() {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/c3/courses/submit', {
+      const response = await fetch('/api/c3/courses/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

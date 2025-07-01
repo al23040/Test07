@@ -21,11 +21,10 @@ function GradeUploadPage() {
     try {
       setLoading(true);
 
-      // 本来のAPI通信（本番環境用）
       const formData = new FormData();
       formData.append('file', file);
 
-const response = await fetch('http://localhost:5000/api/c3/upload-pdf', {
+const response = await fetch('/api/c3/upload-pdf', {
   method: 'POST',
   body: formData
 });
