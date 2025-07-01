@@ -60,7 +60,7 @@ function SubjectConfirmationPage() {
       // ============================
       // ↓ デバッグ用：ローカルに .json をダウンロード
       // ============================
-      const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      /*const blob = new Blob([JSON.stringify(payload, null, 2)], {
         type: 'application/json'
       });
       const url = URL.createObjectURL(blob);
@@ -70,7 +70,7 @@ function SubjectConfirmationPage() {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(url);*/
     }
   };
 
@@ -97,7 +97,7 @@ function SubjectConfirmationPage() {
             </div>
 
             <div className="category-section">
-              <h3>履修途中科目</h3>
+              <h3>履修可能な科目</h3>
               <ul>
                 {availableCourses.map((course, idx) => (
                   <li key={idx}>
