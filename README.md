@@ -17,7 +17,7 @@ Build the Docker image and launch a container:
 
     docker compose up -d
 
-Now you will see the app running on [localhost:3000](http://localhost:3000).
+Now you will see the app running on [localhost](http://localhost).
 
 ### Rebuild and relaunch
 
