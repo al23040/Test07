@@ -30,6 +30,7 @@ class C3API:
             data = request.get_json()
             courses = data.get('courses', [])
             user_id = data.get('user_id')
+            print(user_id, flush=True)
             session = get_session()
             scd = SaveCourseData(session)
             scd.submit_course_data(courses, user_id)
