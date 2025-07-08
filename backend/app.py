@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 
+from c2 import register_c2_api
 from c3 import register_c3_api
 from c4 import register_c4_api
 from c5 import register_c5_api, AccountManager

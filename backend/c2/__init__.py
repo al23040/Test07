@@ -3,7 +3,7 @@ from .account_manager import AccountManager
 
 # Optional API import (requires Flask)
 try:
-    from .api import register_c5_api
+    from .api import register_c2_api
     __all__ = [
         'register_c5_api',
         'Authorization',
