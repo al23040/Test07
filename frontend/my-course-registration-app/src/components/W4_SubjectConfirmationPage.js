@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 function SubjectConfirmationPage() {
   const navigate = useNavigate();
+  const [userId, setUserId] = useState(null);
   const [parsedCourses, setParsedCourses] = useState([]);
   const [availableCourses, setAvailableCourses] = useState([]);
   const [creditData, setCreditData] = useState(null);
@@ -12,9 +13,18 @@ function SubjectConfirmationPage() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    const storedUserId = localStorage.getItem('userId');
     const storedParsed = localStorage.getItem('parsedCourses');
     const storedAvailable = localStorage.getItem('availableCourses');
     const storedCredits = localStorage.getItem('creditData');
+
+    if (storedUserId) {
+      try {
+        setUserId(JSON.parse(storedUserId));
+      } catch {
+        setUserId(null);
+      }
+    }
 
     if (storedParsed && storedAvailable && storedCredits) {
       const parsed = JSON.parse(storedParsed);
@@ -36,17 +46,16 @@ function SubjectConfirmationPage() {
 
   const handleConfirm = async () => {
     const payload = {
+      user_id: userId,
       courses: parsedCourses,
       available_courses: availableCourses,
       credit_data: creditData
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/c3/courses/submit', {
+      const response = await fetch('/api/c3/courses/submit', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
@@ -57,6 +66,13 @@ function SubjectConfirmationPage() {
       console.error('送信エラー:', err);
       setMessage('送信に失敗しました。data.json をダウンロードします。');
 
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.json';
+      a.click();
+      URL.revokeObjectURL(url);
     }
   };
 
