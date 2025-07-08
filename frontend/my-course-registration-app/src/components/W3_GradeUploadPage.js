@@ -21,10 +21,11 @@ function GradeUploadPage() {
     try {
       setLoading(true);
 
+      // 本来のAPI通信（本番環境用）
       const formData = new FormData();
       formData.append('file', file);
 
-const response = await fetch('/api/c3/upload-pdf', {
+const response = await fetch('api/c3/upload-pdf', {
   method: 'POST',
   body: formData
 });
@@ -37,6 +38,7 @@ const response = await fetch('/api/c3/upload-pdf', {
       const json = await response.json();
 
       if (json.courses && json.available_courses && json.credit_data) {
+        localStorage.setItem('userId', JSON.stringify(json.user_id));
         localStorage.setItem('parsedCourses', JSON.stringify(json.courses));
         localStorage.setItem('availableCourses', JSON.stringify(json.available_courses));
         localStorage.setItem('creditData', JSON.stringify(json.credit_data));
