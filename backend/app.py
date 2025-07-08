@@ -13,7 +13,7 @@ CORS(app)
 account_manager = AccountManager()
 
 # Register API endpoints
-c2_api = register_c3_api(app)
+c2_api = register_c2_api(app)
 c3_api = register_c3_api(app)
 c4_api = register_c4_api(app)  # C4 Condition Processing
 c5_api = register_c5_api(app)  # C5 Account Management
