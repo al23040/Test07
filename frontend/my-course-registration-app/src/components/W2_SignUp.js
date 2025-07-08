@@ -30,7 +30,7 @@ function SignUp() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/api/register', {
+      const response = await axios.post('api/register', {
         user_id: parseInt(userId),
         user_pw: stuPass,
       });

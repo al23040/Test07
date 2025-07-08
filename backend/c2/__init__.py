@@ -1,5 +1,6 @@
 from .authorization import Authorization
-from .account_manager import AccountManager
+from c5.account_manager import AccountManager
+from .api import register_c2_api
 
 # Optional API import (requires Flask)
 try:

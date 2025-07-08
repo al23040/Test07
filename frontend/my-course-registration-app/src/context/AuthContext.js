@@ -16,11 +16,14 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user_id');
   };
 
+  const isAuthenticated = userId !== null;
+
   return (
-    <AuthContext.Provider value={{ userId, login, logout }}>
+    <AuthContext.Provider value={{ userId, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+

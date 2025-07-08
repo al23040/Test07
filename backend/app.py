@@ -19,11 +19,6 @@ c3_api = register_c3_api(app)
 c4_api = register_c4_api(app)  # C4 Condition Processing
 c5_api = register_c5_api(app)  # C5 Account Management
 
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    """Health check endpoint"""
-    return jsonify({'status': 'healthy', 'component': 'Course Registration Support System'}), 200
-
 @app.route('/api/users/login', methods=['POST'])
 def user_login():
     """User login endpoint"""

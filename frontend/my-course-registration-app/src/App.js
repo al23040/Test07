@@ -83,7 +83,7 @@ function App() {
               <li><Link to="/grade-upload">成績アップロード</Link></li>
               <li><Link to="/subject-confirmation">履修科目確認</Link></li>
               <li><Link to="/subject-edit">履修科目編集</Link></li>
-              <li><Link to="/preference-input">希望条件件</Link></li>
+              <li><Link to="/preference-input">希望条件</Link></li>
               <li><Link to="/patterns">履修パターン表示</Link></li>
               <li><Link to="/current-semester-recommendation">今学期のおすすめ</Link></li>
             </ul>

@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from c2.Authorization import Authorization
+from c2.authorization import Authorization
 from c5.account_manager import AccountManager
 import logging
 

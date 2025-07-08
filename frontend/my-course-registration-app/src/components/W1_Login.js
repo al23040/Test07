@@ -61,6 +61,7 @@ export default Login;*/
 import React, { useState } from 'react';
 import './W1_Login.css';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
@@ -85,7 +86,7 @@ function Login() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/api/login', {
+      const response = await axios.post('api/login', {
         user_id: parseInt(userId),
         user_pw: stuPass,
       });
@@ -111,7 +112,7 @@ function Login() {
         <label>パスワード</label>
         <input type="password" value={stuPass} onChange={(e) => setStuPass(e.target.value)} />
         <button onClick={handleLogin}>ログイン</button>
-        <a href="/register">新規登録へ</a>
+        <Link to="/register">新規登録へ</Link>
         <p className="error">{error}</p>
       </div>
     </div>
