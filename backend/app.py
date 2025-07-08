@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 
+from c2 import register_c2_api
 from c3 import register_c3_api
 from c4 import register_c4_api
 from c5 import register_c5_api, AccountManager
@@ -13,14 +14,10 @@ CORS(app)
 account_manager = AccountManager()
 
 # Register API endpoints
+c2_api = register_c2_api(app)
 c3_api = register_c3_api(app)
 c4_api = register_c4_api(app)  # C4 Condition Processing
 c5_api = register_c5_api(app)  # C5 Account Management
-
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    """Health check endpoint"""
-    return jsonify({'status': 'healthy', 'component': 'Course Registration Support System'}), 200
 
 @app.route('/api/users/login', methods=['POST'])
 def user_login():
