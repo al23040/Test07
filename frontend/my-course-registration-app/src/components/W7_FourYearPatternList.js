@@ -27,7 +27,7 @@ const W7_FourYearPatternList = () => {
       try {
         // C4 APIを呼び出す際にuserIdとconditionsを渡す
         // FourYearPatternListは詳細ではなく、パターン概要のリストを期待
-        const data = await fetchFourYearPatterns(userId, userConditions);
+        const data = await fetchFourYearPatterns();
         setPatterns(data); // dataはパターンの配列を直接含むと想定
       } catch (err) {
         setError(err);

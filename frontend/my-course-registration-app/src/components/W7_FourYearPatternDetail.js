@@ -1,110 +1,108 @@
 // src/components/W7_FourYearPatternDetail.js
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { fetchFourYearPatterns } from '../api';
+import { fetchFourYearPatterns } from '../api'; // 修正したAPI関数
 import './W7_FourYearPatternDetail.css';
 
 const W7_FourYearPatternDetail = () => {
-  const { patternId } = useParams();
-  const [patternDetail, setPatternDetail] = useState(null);
+  const { patternId } = useParams(); // URLから :patternId を取得
+  const [pattern, setPattern] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 仮のユーザーIDと条件。実際にはログイン情報や希望条件入力画面から取得する
-  const userId = 12345; // ログインしているユーザーのIDに置き換える
+  // 一覧画面と同様の仮ユーザー情報
+  const userId = 12345;
   const userConditions = {
     min_units: 16,
     max_units: 20,
     preferences: ["balanced"],
-    avoid_first_period: false,
-    preferred_time_slots: [],
-    preferred_categories: [],
-    preferred_days: [],
-    avoided_days: []
   };
 
   useEffect(() => {
+    // --- ここから追加 ---
+    console.log("W7_FourYearPatternDetail: patternId from useParams:", patternId);
+    // --- ここまで追加 ---
+
     const getPatternDetail = async () => {
-      if (!patternId) {
-        setError(new Error("パターンIDが指定されていません。"));
-        setLoading(false);
-        return;
-      }
       try {
-        // 全パターンを取得し、その中からpatternIdに一致するものを探す
-        // より効率的なのは、C4に個別のパターン詳細を取得するAPIを追加すること
-        const allPatterns = await fetchFourYearPatterns(userId, userConditions);
-        const detail = allPatterns.find(p => p.id === patternId);
-        if (detail) {
-          setPatternDetail(detail);
-        } else {
-          setError(new Error("指定されたパターンが見つかりませんでした。"));
-        }
+        console.log(`詳細ページ: ${patternId} のデータを取得します。`); // 既存の行
+        
+        // --- ここから追加 ---
+        console.log("W7_FourYearPatternDetail: Calling fetchFourYearPatterns with userId:", userId, "userConditions:", userConditions, "patternId:", patternId);
+        // --- ここまで追加 ---
+
+        // 修正したAPI関数に patternId を渡して詳細データを要求
+        const data = await fetchFourYearPatterns(userId, userConditions, patternId);
+        
+        // --- ここから追加 ---
+        console.log("W7_FourYearPatternDetail: APIから取得した詳細データ:", data);
+        // --- ここまで追加 ---
+
+        setPattern(data);
       } catch (err) {
+        console.error("詳細データの取得でエラーが発生:", err);
         setError(err);
       } finally {
         setLoading(false);
       }
     };
+
     getPatternDetail();
-  }, [patternId, userId, JSON.stringify(userConditions)]);
+  }, [patternId]); // patternIdが変更されたら再実行
 
   if (loading) {
-    return <div className="loading">履修パターン詳細をロード中...</div>;
+    return <div className="loading">パターン詳細をロード中...</div>;
   }
 
   if (error) {
-    return <div className="error">データのロードに失敗しました: {error.message}</div>;
+    return <div className="error">詳細データのロードに失敗しました: {error.message}</div>;
   }
 
-  if (!patternDetail) {
-    return <div className="no-data">履修パターン詳細が見つかりませんでした。</div>;
+  if (!pattern) {
+    return <div className="no-data">該当するパターンが見つかりませんでした。</div>;
   }
 
-  const days = ['月', '火', '水', '木', '金'];
-  // 時間割の時限は、取得したデータに合わせて調整
-  // 現状のC4出力では '1限', '2限' の形式なので、それに合わせる
-  const periods = ['1限', '2限', '3限', '4限', '5限'];
-
+  // 時間割テーブルをレンダリングするヘルパーコンポーネント
+  const Timetable = ({ schedule }) => (
+    <table className="timetable">
+      <thead>
+        <tr>
+          <th>時限</th>
+          <th>月</th>
+          <th>火</th>
+          <th>水</th>
+          <th>木</th>
+          <th>金</th>
+        </tr>
+      </thead>
+      <tbody>
+        {['1限', '2限', '3限', '4限', '5限'].map(period => (
+          <tr key={period}>
+            <td>{period}</td>
+            {['月', '火', '水', '木', '金'].map(day => (
+              <td key={day}>{schedule[day]?.[period] || ''}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 
   return (
     <div className="four-year-pattern-detail">
-      <h2>{patternDetail.name} の詳細</h2>
-      <p className="description">{patternDetail.description}</p>
-      <p className="total-units">総取得単位数: {patternDetail.totalUnits}</p>
+      <h2>{pattern.name}</h2>
+      <p className="description">{pattern.description}</p>
+      <p className="total-units">総取得単位数: {pattern.totalUnits}単位</p>
 
-      <h3>4年間の時間割</h3>
-      {patternDetail.semesters.map(semester => (
-        <div key={`${semester.year}-${semester.semester}`} className="semester-schedule">
-          <h4>{semester.year}年生 {semester.semester}</h4>
-          <table className="timetable" border="1">
-            <thead>
-              <tr>
-                <th>時間</th>
-                {days.map(day => <th key={day}>{day}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {periods.map(period => (
-                <tr key={period}>
-                  <td>{period}</td>
-                  {days.map(day => (
-                    <td key={`${day}-${period}`}>
-                      {/* C4からのデータはオブジェクトのvalueとして科目名が来る想定 */}
-                      {semester.schedule[day] && semester.schedule[day][period]
-                        ? semester.schedule[day][period]
-                        : ''}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p>この学期で取得予定の単位数: {semester.totalCredits}</p>
+      {pattern.semesters.map((semester, index) => (
+        <div key={index} className="semester-schedule">
+          <h4>{semester.year}年度 {semester.semester}</h4>
+          <Timetable schedule={semester.schedule} />
         </div>
       ))}
-      <Link to="/patterns" className="back-button">
-        全パターンに戻る
+      
+      <Link to="/patterns" className="back-link">
+        パターン一覧に戻る
       </Link>
     </div>
   );

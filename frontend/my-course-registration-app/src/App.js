@@ -8,6 +8,7 @@ import GradeUploadPage from './components/W3_GradeUploadPage';
 import SubjectConfirmationPage from './components/W4_SubjectConfirmationPage';
 import SubjectEditPage from './components/W5_SubjectEditPage';
 import PatternDisplay from './components/W7_FourYearPatternList'; // W7コンポーネントをインポート
+import PatternDetail from './components/W7_FourYearPatternDetail';
 import CurrentSemesterRecommendation from './components/W8_CurrentSemesterRecommendation'; // W8コンポーネントをインポート
 import './App.css'; // グローバルなスタイル
 
@@ -35,6 +36,7 @@ function App() {
             <Route path="/subject-confirmation" element={<SubjectConfirmationPage />} />
             <Route path="/subject-edit" element={<SubjectEditPage />} />
             <Route path="/patterns" element={<PatternDisplay />} />
+            <Route path="/patterns/:patternId" element={<PatternDetail />} />
             <Route path="/current-semester-recommendation" element={<CurrentSemesterRecommendation />} />
             <Route path="/" element={<Home />} />
           </Routes>

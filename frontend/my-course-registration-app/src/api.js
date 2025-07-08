@@ -100,35 +100,55 @@ export const fetchCurrentSemesterRecommendation = async (userId, conditions) => 
 };
 
 /**
- * 4年間の履修パターンリストを取得する。(C4 API)
+ * 4年間の履修パターンリストまたは詳細を取得する。(C4 API)
  * @param {number} userId - ユーザーID
  * @param {Object} conditions - ユーザーが設定した条件
- * @returns {Promise<Array<Object>>} 4年間の履修パターンデータの配列
+ * @param {string} [patternId] - (オプション) 詳細を取得したいパターンのID
+ * @returns {Promise<Array<Object>|Object>} パターンデータの配列または単一のパターンデータ
  */
-export const fetchFourYearPatterns = async (userId, conditions) => {
+export const fetchFourYearPatterns = async (userId, conditions, patternId = null) => {
   try {
-    console.log(`API: C4から4年間の履修パターン (ユーザー: ${userId}) データを取得中...`);
+    // --- ここから追加 ---
+    console.log("api.js: fetchFourYearPatterns received patternId:", patternId);
+    // --- ここまで追加 ---
+
+    console.log(`API: C4から4年間の履修パターン (ユーザー: ${userId}, パターンID: ${patternId || 'なし'}) データを取得中...`);
+    
+    // リクエストボディを構築
+    const requestBody = {
+      user_id: userId,
+      conditions: conditions,
+      // 仮のデータ。将来的にはC5から取得する必要がある
+      completed_courses: [],
+      all_courses: []
+    };
+
+    // patternIdがあればボディに追加
+    if (patternId) {
+      requestBody.pattern_id = patternId;
+    }
+
+    // --- ここから追加 ---
+    console.log("api.js: Request Body sent to API:", JSON.stringify(requestBody, null, 2));
+    // --- ここまで追加 ---
+
     const response = await fetch(`${BASE_URL}/c4/four-year-patterns`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      // バックエンドの期待する形式に合わせて調整
-      // test_c4.pyのapi_requestを見ると、user_idとconditions以外に
-      // completed_coursesとavailable_coursesも必要そうなので追加
-      body: JSON.stringify({
-        user_id: userId,
-        conditions: conditions,
-        // 仮のデータ。実際にはC5から取得する必要がある
-        completed_courses: [], // ここにユーザーが履修済みの科目をC5から取得して渡す
-        all_courses: []  // ここに利用可能な全科目をC5から取得して渡す
-      }),
+      body: JSON.stringify(requestBody), // 構築したボディを使用
     });
+
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
+    
     const data = await response.json();
+    // --- ここから追加 ---
+    console.log("api.js: Received response data from API:", data);
+    // --- ここまで追加 ---
     return data;
   } catch (error) {
     console.error("Error fetching four year patterns from C4:", error);
