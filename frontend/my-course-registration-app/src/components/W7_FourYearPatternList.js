@@ -1,7 +1,8 @@
-// src/components/W7_FourYearPatternList.js
+// frontend/my-course-registration-app/src/components/W7_FourYearPatternList.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchFourYearPatterns } from '../api'; // 修正されたapi.jsからインポート
+// 必要なAPI関数をインポート
+import { fetchFourYearPatterns, fetchAllSubjects, fetchUserTakenCourses } from '../api';
 import './W7_FourYearPatternList.css';
 
 const W7_FourYearPatternList = () => {
@@ -9,26 +10,23 @@ const W7_FourYearPatternList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 仮のユーザーIDと条件。実際にはログイン情報や希望条件入力画面から取得する
-  const userId = 12345; // ログインしているユーザーのIDに置き換える
+  // ユーザーIDと条件を仮で設定（本来は認証情報やContextから取得します）
+  const userId = 1;
   const userConditions = {
-    min_units: 16,
-    max_units: 20,
-    preferences: ["balanced"],
-    avoid_first_period: false,
-    preferred_time_slots: [],
-    preferred_categories: [],
-    preferred_days: [],
-    avoided_days: []
+    // 例: { "max_credits_per_semester": 20, "exclude_field": "humanities" }
   };
 
   useEffect(() => {
     const getPatterns = async () => {
+      setLoading(true);
       try {
-        // C4 APIを呼び出す際にuserIdとconditionsを渡す
-        // FourYearPatternListは詳細ではなく、パターン概要のリストを期待
-        const data = await fetchFourYearPatterns(userId, userConditions);
-        setPatterns(data); // dataはパターンの配列を直接含むと想定
+        // C5から科目データを取得
+        const completedCourses = await fetchUserTakenCourses(userId);
+        const allCourses = await fetchAllSubjects();
+        
+        // C4 APIを呼び出す際に取得したデータを渡す
+        const data = await fetchFourYearPatterns(userId, userConditions, completedCourses, allCourses);
+        setPatterns(data);
       } catch (err) {
         setError(err);
       } finally {
@@ -36,35 +34,30 @@ const W7_FourYearPatternList = () => {
       }
     };
     getPatterns();
-  }, [userId, JSON.stringify(userConditions)]);
+    // userConditionsはオブジェクトなので、JSON.stringifyして比較する
+  }, [userId, JSON.stringify(userConditions)]); 
 
-  if (loading) {
-    return <div className="loading">履修パターンをロード中...</div>;
-  }
-
-  if (error) {
-    return <div className="error">データのロードに失敗しました: {error.message}</div>;
-  }
-
-  if (!patterns || patterns.length === 0) {
-    return <div className="no-data">利用可能な履修パターンが見つかりませんでした。</div>;
-  }
-
+  if (loading) return <div className="loading-container"><div className="loader"></div><p>履修パターンを生成中...</p></div>;
+  if (error) return <div className="error-container"><p>エラーが発生しました: {error.message}</p></div>;
+  
   return (
     <div className="four-year-pattern-list">
-      <h2>4年間の履修登録パターン候補</h2>
-      <div className="pattern-cards">
-        {patterns.map(pattern => (
-          <div key={pattern.id} className="pattern-card">
-            <h3>{pattern.name}</h3>
-            <p className="pattern-description">{pattern.description}</p>
-            <p className="pattern-total-units">総取得単位数: {pattern.totalUnits}単位</p>
-            <Link to={`/patterns/${pattern.id}`} className="view-detail-button">
-              詳細を見る
-            </Link>
-          </div>
-        ))}
-      </div>
+      <h2>4年間の履修パターン</h2>
+      {patterns && patterns.length > 0 ? (
+        <ul>
+          {patterns.map((pattern) => (
+            <li key={pattern.id}>
+              <Link to={`/patterns/${pattern.id}`}>
+                <h3>{pattern.name}</h3>
+                <p>{pattern.description}</p>
+                <span>総単位数: {pattern.totalUnits}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>表示できる履修パターンがありません。</p>
+      )}
     </div>
   );
 };

@@ -1,73 +1,101 @@
-/* src/components/W7_FourYearPatternList.css */
+/* frontend/my-course-registration-app/src/components/W7_FourYearPatternDetail.css */
 
-.four-year-pattern-list {
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+.pattern-detail-container {
+  padding: 25px;
+  background-color: #f4f7f6;
 }
 
-.four-year-pattern-list h2 {
+.pattern-detail-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.pattern-detail-header h1 {
+  font-size: 2.2em;
+  color: #34495e;
+}
+
+.pattern-description {
+  font-size: 1.1em;
+  color: #555;
+  max-width: 700px;
+  margin: 10px auto 20px auto;
+}
+
+.pattern-meta {
+  font-size: 1.1em;
   color: #333;
-  margin-bottom: 30px;
-  border-bottom: 2px solid #61dafb;
-  padding-bottom: 10px;
+  font-weight: bold;
 }
 
-.pattern-cards {
+.semesters-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* レスポンシブなグリッド */
-  gap: 25px;
-  padding: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
 }
 
-.pattern-card {
-  background-color: #fdfdfd;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
+.semester-card {
+  background: #fff;
+  border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 強めのシャドウ */
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  border-top: 4px solid #3498db;
 }
 
-.pattern-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-.pattern-card h3 {
-  color: #444;
+.semester-card h3 {
   margin-top: 0;
+  color: #2980b9;
+  font-size: 1.3em;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
   margin-bottom: 15px;
-  font-size: 1.5em;
 }
 
-.pattern-card p {
-  color: #666;
-  font-size: 0.95em;
-  line-height: 1.5;
-  margin-bottom: 10px;
+.course-list-detail {
+  list-style: none;
+  padding: 0;
 }
 
-.pattern-card p:last-of-type {
-  margin-bottom: 20px;
+.course-list-detail li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
 }
 
-.detail-link {
-  display: inline-block;
-  background-color: #61dafb;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 5px;
+.course-list-detail li:last-child {
+  border-bottom: none;
+}
+
+.course-list-detail .course-name {
+  color: #333;
+}
+
+.course-list-detail .course-credits {
+  color: #7f8c8d;
+  font-size: 0.9em;
+  white-space: nowrap;
+  padding-left: 15px;
+}
+
+.pattern-detail-footer {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.back-link {
+  color: #3498db;
   text-decoration: none;
   font-weight: bold;
-  transition: background-color 0.3s ease;
-  margin-top: auto; /* カード下部に配置 */
+}
+.back-link:hover {
+  text-decoration: underline;
 }
 
-.detail-link:hover {
-  background-color: #21a1f1;
+/* ローディング・エラー表示用の共通スタイル */
+.loading-container, .error-container {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2em;
+  color: #555;
 }
