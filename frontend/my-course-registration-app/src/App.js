@@ -11,6 +11,7 @@ import SubjectConfirmationPage from './components/W4_SubjectConfirmationPage';
 import SubjectEditPage from './components/W5_SubjectEditPage';
 import PreferenceInput from './components/W6_PreferenceInput';
 import PatternDisplay from './components/W7_FourYearPatternList';
+import PatternDetail from './components/W7_FourYearPatternDetail';
 import CurrentSemesterRecommendation from './components/W8_CurrentSemesterRecommendation';
 import './App.css';
 
@@ -52,6 +53,9 @@ function App() {
               } />
               <Route path="/patterns" element={
                 <PrivateRoute><PatternDisplay /></PrivateRoute>
+              } />
+              <Route path="/patterns/:patternId" element={
+                <PrivateRoute><PatternDetail /></PrivateRoute> 
               } />
               <Route path="/current-semester-recommendation" element={
                 <PrivateRoute><CurrentSemesterRecommendation /></PrivateRoute>

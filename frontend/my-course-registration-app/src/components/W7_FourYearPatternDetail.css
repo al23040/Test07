@@ -51,7 +51,6 @@
   padding-bottom: 10px;
 }
 
-/* 時間割テーブルのスタイル */
 .timetable {
   width: 100%;
   border-collapse: collapse;
@@ -64,7 +63,7 @@
   border: 1px solid #ddd;
   padding: 12px 8px;
   text-align: center;
-  font-size: 0.9em; /* 詳細ページでは少し小さめに */
+  font-size: 0.9em; 
   vertical-align: middle;
 }
 
@@ -85,11 +84,11 @@
 }
 
 .timetable td {
-  min-width: 100px; /* 科目名が入りきるように最小幅を設定 */
+  min-width: 100px; 
 }
 
 .timetable td:empty::before {
-  content: "---"; /* 空のセルに表示する内容 */
+  content: "---"; 
   color: #aaa;
 }
 
