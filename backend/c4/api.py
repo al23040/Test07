@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from typing import List, Dict, Optional, Any
 import json
 from datetime import datetime
+import traceback
 
 from .condition_processor import ConditionProcessor, UserConditions, Course, CourseCategory, RequirementType, DayOfWeek
 from .condition_parser import ConditionParser
@@ -34,7 +35,6 @@ class C4API:
             """
             try:
                 data = request.get_json()
-
                 # Validate required fields
                 required_fields = ['user_id', 'conditions', 'completed_courses', 'available_courses']
                 for field in required_fields:
@@ -46,7 +46,6 @@ class C4API:
                 conditions_dict = data['conditions']
                 completed_courses = self._parse_courses(data['completed_courses'])
                 available_courses = self._parse_courses(data['available_courses'])
-
                 # Convert conditions to UserConditions object
                 user_conditions = self._parse_user_conditions(conditions_dict)
 
@@ -162,9 +161,10 @@ class C4API:
                 return jsonify(response_data), 200
 
             except Exception as e:
+                print(traceback.format_exc())
                 return jsonify({
                     'status': 'error',
-                    'message': str(e),
+                    'message': 'エラーの発生',
                     'timestamp': datetime.now().isoformat()
                 }), 500
 

@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from c3.utils import get_completed_courses, get_available_courses
+import json
 
 import requests
 
@@ -35,7 +36,9 @@ class C7API:
                 "all_courses": all_courses
             }
             response = requests.post('http://localhost:5000/api/c4/four-year-patterns', json=send_data)
-
+            data_1 = jsonify(response.json())
+            print(data_1, flush=True)
+            print("Response JSON from /api/c4/four-year-patterns:", response.json(), flush=True)
             return jsonify(response.json()), 200
 
 def register_c7_api(app: Flask) -> C7API:

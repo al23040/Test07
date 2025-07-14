@@ -92,12 +92,14 @@ class PlanPattern:
 class ConditionProcessor:
     def __init__(self):
         self.graduation_requirements = {
-            CourseCategory.UNIVERSITY_COMMON: {'compulsory': 8, 'elective': 0},
-            CourseCategory.COMMON_MATH: {'compulsory': 12, 'elective': 0},
-            CourseCategory.LANGUAGE: {'compulsory': 8, 'elective': 0},
-            CourseCategory.INFORMATICS: {'compulsory': 4, 'elective': 0},
+            CourseCategory.UNIVERSITY_COMMON: {'compulsory': 0, 'elective': 0},
+            CourseCategory.COMMON_MATH: {'compulsory': 14, 'elective': 0},
+            CourseCategory.LANGUAGE: {'compulsory': 10, 'elective': 0},
+            CourseCategory.INFORMATICS: {'compulsory': 0, 'elective': 0},
             CourseCategory.HEALTH_PE: {'compulsory': 2, 'elective': 0},
-            CourseCategory.MAJOR: {'compulsory': 40, 'elective': 50}
+            CourseCategory.MAJOR: {'compulsory': 40, 'elective': 30},
+            CourseCategory.COMMON_ENGINEERING: {'compulsory': 0, 'elective': 0},
+            CourseCategory.HUMANITIES_SOCIAL: {'compulsory': 0, 'elective': 6}
         }
         self.total_required_credits = 124
 

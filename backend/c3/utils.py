@@ -112,7 +112,6 @@ def make_send_available_courses(semester_offered: int, year_offered: int, send_c
     base_year = 2023
     limit_grade = year_offered - base_year + 1
     limit_semester = semester_offered
-    print(limit_grade, limit_semester)
 
     taken_codes = set(course["code"] for course in send_courses)
 
