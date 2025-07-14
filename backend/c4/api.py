@@ -113,7 +113,6 @@ class C4API:
             """
             try:
                 data = request.get_json()
-
                 # Validate required fields
                 required_fields = ['user_id', 'conditions', 'completed_courses', 'all_courses']
                 for field in required_fields:
@@ -317,7 +316,9 @@ class C4API:
             '言語科目': CourseCategory.LANGUAGE,
             '情報科目': CourseCategory.INFORMATICS,
             '体育健康科目': CourseCategory.HEALTH_PE,
-            '専門科目': CourseCategory.MAJOR
+            '専門科目': CourseCategory.MAJOR,
+            '共通工学系教養科目': CourseCategory.COMMON_ENGINEERING,  
+            '人文社会系教養科目': CourseCategory.HUMANITIES_SOCIAL,    
         }
 
         for cat_str in category_strings:

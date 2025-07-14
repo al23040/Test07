@@ -1,135 +1,44 @@
-// W6_PreferenceInput.js
-/*import React, { useState } from 'react';
-import './W6_PreferenceInput.css';
-import { useNavigate } from 'react-router-dom';
-
-function W6_PreferenceInput() {
-  const navigate = useNavigate();
-  const [showPriority, setShowPriority] = useState(false);
-  const [showPlus, setShowPlus] = useState(false);
-  const [showMinus, setShowMinus] = useState(false);
-
-  const handleNext = () => {
-    alert("入力完了");
-    navigate('/next-page');
-  };
-
-  return (
-    <div className="container">
-      <h1>希望条件の入力</h1>
-
-      <div className="input-group">
-        <label>単位数</label>
-        最少 <input type="number" min="0" max="49" /> 単位 〜 最大
-        <input type="number" min="0" max="49" /> 単位
-      </div>
-
-      <div className="input-group">
-        <input
-          type="checkbox"
-          id="priority-toggle"
-          checked={showPriority}
-          onChange={() => setShowPriority(!showPriority)}
-        />
-        <label htmlFor="priority-toggle">優先科目を指定する</label>
-
-        {showPriority && (
-          <div className="details-box">
-            <div className="priority-item">
-              <label><input type="checkbox" value="専門" /> 専門</label><br />
-              <label><input type="checkbox" value="数理" /> 数理</label><br />
-              <label><input type="checkbox" value="英語" /> 英語</label><br />
-              <label><input type="checkbox" value="人文" /> 人文</label><br />
-              <label><input type="checkbox" value="体育" /> 体育</label><br />
-              <label><input type="checkbox" value="工学部共通科目" /> 工学部共通科目</label>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="input-group">
-        <input
-          type="checkbox"
-          id="plus-toggle"
-          checked={showPlus}
-          onChange={() => setShowPlus(!showPlus)}
-        />
-        <label htmlFor="plus-toggle">その他プラス要件を指定する</label>
-
-        {showPlus && (
-          <div className="details-box">
-            <div className="plus-item">
-              <label>週何日以下:</label>
-              <input type="number" min="1" max="7" placeholder="例: 3" />
-            </div>
-            <div className="plus-item">
-              <label>最低取得率(%):</label>
-              <input type="number" min="0" max="100" placeholder="例: 80" />
-            </div>
-            <div className="plus-item">
-              <label>希望研究室名:</label>
-              <input type="text" placeholder="例: 井尻研究室" />
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="input-group">
-        <input
-          type="checkbox"
-          id="minus-toggle"
-          checked={showMinus}
-          onChange={() => setShowMinus(!showMinus)}
-        />
-        <label htmlFor="minus-toggle">その他マイナス要件を指定する</label>
-
-        {showMinus && (
-          <div className="details-box">
-            <div className="minus-item">
-              <label>避けたい曜日:</label>
-              <select>
-                <option value="">選択してください</option>
-                <option value="月">月曜</option>
-                <option value="火">火曜</option>
-                <option value="水">水曜</option>
-                <option value="木">木曜</option>
-                <option value="金">金曜</option>
-                <option value="土">土曜</option>
-              </select>
-            </div>
-            <div className="minus-item">
-              <label>最大空きコマ数:</label>
-              <input type="number" min="0" max="3" placeholder="例: 2" />
-            </div>
-          </div>
-        )}
-      </div>
-
-      <button id="next-button" onClick={handleNext}>次へ</button>
-    </div>
-  );
-}
-
-export default W6_PreferenceInput;*/
-
-import React, { useState } from 'react';
+/*import React, { useState, useEffect } from 'react';
 import './W6_PreferenceInput.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function W6_PreferenceInput() {
   const navigate = useNavigate();
-  const user_id = parseInt(localStorage.getItem('user_id')) || 0;
+  const userId = parseInt(localStorage.getItem('user_id'), 10) || null;
 
   const [minUnits, setMinUnits] = useState('');
   const [maxUnits, setMaxUnits] = useState('');
   const [preferredCategories, setPreferredCategories] = useState([]);
   const [showPriority, setShowPriority] = useState(false);
-  const [avoidFirst, setAvoidFirst] = useState(false);
+  const [avoidFirstPeriod, setAvoidFirstPeriod] = useState(false);
   const [preferredDays, setPreferredDays] = useState([]);
   const [avoidedDays, setAvoidedDays] = useState([]);
   const [preferredTimeSlots, setPreferredTimeSlots] = useState([]);
   const [preferences, setPreferences] = useState([]);
+  const [availableCourses, setAvailableCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
+    const storedAvailable = localStorage.getItem('availableCourses');
+    if (storedAvailable) {
+      try {
+        setAvailableCourses(JSON.parse(storedAvailable));
+      } catch {
+        setAvailableCourses([]);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+    }
+  }, [userId]);
 
   const handleCheckboxChange = (value, listSetter, currentList) => {
     if (currentList.includes(value)) {
@@ -140,29 +49,58 @@ function W6_PreferenceInput() {
   };
 
   const handleNext = async () => {
-    const data = {
-      user_id,
-      min_units: parseInt(minUnits),
-      max_units: parseInt(maxUnits),
-      preferences,
-      avoid_first_period: avoidFirst,
-      preferred_time_slots: preferredTimeSlots,
+    if (!userId) {
+      alert("ユーザーIDが見つかりません。ログインしてください。");
+      navigate('/login');
+      return;
+    }
+
+    if (!minUnits || !maxUnits) {
+      alert("単位数を入力してください。");
+      return;
+    }
+    if (parseInt(minUnits, 10) > parseInt(maxUnits, 10)) {
+      alert("最小単位数は最大単位数より小さくしてください。");
+      return;
+    }
+
+    const dataToSend = {
+      user_id: userId,
+      min_units: parseInt(minUnits, 10),
+      max_units: parseInt(maxUnits, 10),
+      preferences: preferences,
+      avoid_first_period: avoidFirstPeriod,
+      preferred_time_slots: preferredTimeSlots.map(time => time.replace('限', '')),
       preferred_categories: preferredCategories,
       preferred_days: preferredDays,
       avoided_days: avoidedDays
     };
 
     try {
-      const res = await axios.post('/user_conditions', data);
+      const res = await axios.post(`/api/c7/user_conditions/${userId}`, dataToSend);
+
       if (res.data.status === 'ok') {
-        alert("入力完了");
-        navigate('/next-page');
+        localStorage.setItem('user_conditions', JSON.stringify(dataToSend));
+        alert("希望条件が正常に送信されました！");
+        navigate('/patterns');
+      } else {
+        setError(res.data.error || "条件の保存に失敗しました。");
+        alert(`送信に失敗しました: ${res.data.error || '不明なエラー'}`);
       }
     } catch (err) {
-      console.error(err);
-      alert("送信に失敗しました");
+      console.error("Failed to submit preferences:", err);
+      setError(err.response?.data?.error || err.message || "送信中にエラーが発生しました。");
+      alert(`送信に失敗しました: ${err.response?.data?.error || err.message || '不明なエラー'}`);
     }
   };
+
+  if (loading) {
+    return <div className="container">データを読み込み中...</div>;
+  }
+
+  if (error) {
+    return <div className="container">エラー: {error}</div>;
+  }
 
   return (
     <div className="container">
@@ -170,22 +108,37 @@ function W6_PreferenceInput() {
 
       <div className="input-group">
         <label>単位数</label>
-        最少 <input type="number" value={minUnits} onChange={e => setMinUnits(e.target.value)} /> 単位 〜 最大
-        <input type="number" value={maxUnits} onChange={e => setMaxUnits(e.target.value)} /> 単位
+        最少
+        <input
+          type="number"
+          className="half-width"
+          value={minUnits}
+          onChange={e => setMinUnits(e.target.value)}
+          min="0"
+        /> 単位 〜 最大
+        <input
+          type="number"
+          className="half-width"
+          value={maxUnits}
+          onChange={e => setMaxUnits(e.target.value)}
+          min="0"
+        /> 単位
       </div>
 
       <div className="input-group">
-        <input
-          type="checkbox"
-          id="priority-toggle"
-          checked={showPriority}
-          onChange={() => setShowPriority(!showPriority)}
-        />
-        <label htmlFor="priority-toggle">優先科目を指定する</label>
+        <label htmlFor="priority-toggle">
+          <input
+            type="checkbox"
+            id="priority-toggle"
+            checked={showPriority}
+            onChange={() => setShowPriority(!showPriority)}
+          />
+          優先科目を指定する
+        </label>
 
         {showPriority && (
           <div className="details-box">
-            {["専門科目", "数理科目", "英語", "人文", "体育", "工学部共通科目"].map((cat) => (
+            {["専門科目", "共通数理科目", "人文社会系教養科目", "言語科目", "共通健康科目", "全学共通科目","共通工学系教養科目"].map((cat) => (
               <label key={cat}>
                 <input
                   type="checkbox"
@@ -200,68 +153,347 @@ function W6_PreferenceInput() {
         )}
       </div>
 
-      <div className="input-group">
-        <label>プラス条件</label>
-        <div className="plus-item">
-          <label>希望授業名（カンマ区切り）:</label>
-          <input
-            type="text"
-            placeholder="プログラミング入門, 数理情報処理"
-            onChange={(e) => setPreferences(e.target.value.split(',').map(s => s.trim()))}
-          />
+      <div className="input-group vertical">
+        <label>希望授業名</label>
+        <div className="checkbox-list details-box" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+          {availableCourses.length > 0 ? (
+            availableCourses.map((course) => (
+              <label key={course.code || course.subject_name} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={preferences.includes(course.subject_name)}
+                  onChange={() =>
+                    handleCheckboxChange(course.subject_name, setPreferences, preferences)
+                  }
+                />
+                {course.subject_name} ({course.credit}単位)
+              </label>
+            ))
+          ) : (
+            <p>履修可能科目データがありません。</p>
+          )}
         </div>
+      </div>
 
-        <div className="plus-item">
-          <label>希望時間帯（例: 1限, 2限）:</label>
-          <input
-            type="text"
-            placeholder="2限, 4限"
-            onChange={(e) => setPreferredTimeSlots(e.target.value.split(',').map(s => s.trim()))}
-          />
-        </div>
-
-        <div className="plus-item">
-          <label>
-            <input
-              type="checkbox"
-              checked={avoidFirst}
-              onChange={() => setAvoidFirst(!avoidFirst)}
-            />
-            1限を避けたい
-          </label>
+      <div className="input-group vertical">
+        <label>希望時間帯</label>
+        <div className="checkbox-list details-box">
+          {["1限", "2限", "3限", "4限", "5限"].map((time) => (
+            <label key={time}>
+              <input
+                type="checkbox"
+                value={time}
+                checked={preferredTimeSlots.includes(time)}
+                onChange={() => handleCheckboxChange(time, setPreferredTimeSlots, preferredTimeSlots)}
+              />
+              {time}
+            </label>
+          ))}
         </div>
       </div>
 
       <div className="input-group">
+        <label>
+          <input
+            type="checkbox"
+            checked={avoidFirstPeriod}
+            onChange={() => setAvoidFirstPeriod(!avoidFirstPeriod)}
+          />
+          1限を避けたい
+        </label>
+      </div>
+
+      <div className="input-group day-preference-group">
         <label>曜日の希望</label>
         <div>
-          避けたい曜日:
-          {["月", "火", "水", "木", "金", "土"].map((day) => (
-            <label key={day}>
+          <span>避けたい曜日:</span>
+          <div className="day-selection-group">
+            {["月", "火", "水", "木", "金", "土"].map((day) => (
+              <label key={day}>
+                <input
+                  type="checkbox"
+                  value={day}
+                  checked={avoidedDays.includes(day)}
+                  onChange={() => handleCheckboxChange(day, setAvoidedDays, avoidedDays)}
+                />
+                {day}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div>
+          <span>出たい曜日:</span>
+          <div className="day-selection-group">
+            {["月", "火", "水", "木", "金", "土"].map((day) => (
+              <label key={day}>
+                <input
+                  type="checkbox"
+                  value={day}
+                  checked={preferredDays.includes(day)}
+                  onChange={() => handleCheckboxChange(day, setPreferredDays, preferredDays)}
+                />
+                {day}
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <button id="next-button" onClick={handleNext}>次へ</button>
+    </div>
+  );
+}
+
+export default W6_PreferenceInput;*/
+
+// W6_PreferenceInput.js
+import React, { useState, useEffect } from 'react';
+import './W6_PreferenceInput.css';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+function W6_PreferenceInput() {
+  const navigate = useNavigate();
+  const userId = parseInt(localStorage.getItem('user_id'), 10) || null;
+
+  const [minUnits, setMinUnits] = useState('');
+  const [maxUnits, setMaxUnits] = useState('');
+  const [preferredCategories, setPreferredCategories] = useState([]);
+  const [showPriority, setShowPriority] = useState(false);
+  const [avoidFirstPeriod, setAvoidFirstPeriod] = useState(false);
+  const [preferredDays, setPreferredDays] = useState([]);
+  const [avoidedDays, setAvoidedDays] = useState([]);
+  const [preferredTimeSlots, setPreferredTimeSlots] = useState([]);
+  const [preferences, setPreferences] = useState([]);
+  const [availableCourses, setAvailableCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
+    const storedAvailable = localStorage.getItem('availableCourses');
+    if (storedAvailable) {
+      try {
+        setAvailableCourses(JSON.parse(storedAvailable));
+      } catch {
+        setAvailableCourses([]);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+    }
+  }, [userId]);
+
+  const handleCheckboxChange = (value, listSetter, currentList) => {
+    if (currentList.includes(value)) {
+      listSetter(currentList.filter((item) => item !== value));
+    } else {
+      listSetter([...currentList, value]);
+    }
+  };
+  
+  const handleNext = async () => {
+    if (!userId) {
+      alert("ユーザーIDが見つかりません。ログインしてください。");
+      navigate('/login');
+      return;
+    }
+
+    if (!minUnits || !maxUnits) {
+      alert("単位数を入力してください。");
+      return;
+    }
+    if (parseInt(minUnits, 10) > parseInt(maxUnits, 10)) {
+      alert("最小単位数は最大単位数より小さくしてください。");
+      return;
+    }
+
+    const dataToSend = {
+      user_id: userId,
+      min_units: parseInt(minUnits, 10),
+      max_units: parseInt(maxUnits, 10),
+      preferences: preferences,
+      avoid_first_period: avoidFirstPeriod,
+      preferred_time_slots: preferredTimeSlots.map(time => time.replace('限', '')),
+      preferred_categories: preferredCategories,
+      preferred_days: preferredDays,
+      avoided_days: avoidedDays
+    };
+
+    try {
+      // 1. ユーザー条件を送信
+      const resCond = await axios.post(`/api/c7/user_conditions/${userId}`, dataToSend);
+      if (resCond.data.status !== 'ok') {
+        alert(`条件の送信に失敗しました: ${resCond.data.error || '不明なエラー'}`);
+        return;
+      }
+
+      // 2. 4年パターン取得APIを呼ぶ
+      const resPatterns = await axios.post('/api/c4/four-year-patterns', { user_id: userId });
+
+      if (resPatterns.status === 200 && resPatterns.data) {
+        // 3. パターンをローカルストレージに保存
+        localStorage.setItem('four_year_patterns', JSON.stringify(resPatterns.data));
+        alert("希望条件が正常に送信され、履修パターンを取得しました。");
+
+        // 4. パターン表示ページへ遷移
+        navigate('/patterns');
+      } else {
+        alert("履修パターンの取得に失敗しました。");
+      }
+    } catch (err) {
+      console.error("送信または取得中にエラー:", err);
+      alert("送信または取得中にエラーが発生しました。");
+    }
+  };
+
+  if (loading) {
+    return <div className="container">データを読み込み中...</div>;
+  }
+
+  if (error) {
+    return <div className="container">エラー: {error}</div>;
+  }
+
+  return (
+    <div className="container">
+      <h1>希望条件の入力</h1>
+
+      <div className="input-group">
+        <label>単位数</label>
+        最少
+        <input
+          type="number"
+          className="half-width"
+          value={minUnits}
+          onChange={e => setMinUnits(e.target.value)}
+          min="0"
+        /> 単位 〜 最大
+        <input
+          type="number"
+          className="half-width"
+          value={maxUnits}
+          onChange={e => setMaxUnits(e.target.value)}
+          min="0"
+        /> 単位
+      </div>
+
+      <div className="input-group">
+        <label htmlFor="priority-toggle">
+          <input
+            type="checkbox"
+            id="priority-toggle"
+            checked={showPriority}
+            onChange={() => setShowPriority(!showPriority)}
+          />
+          優先科目を指定する
+        </label>
+
+        {showPriority && (
+          <div className="details-box">
+            {["専門科目", "共通数理科目", "人文社会系教養科目", "言語科目", "共通健康科目", "全学共通科目","共通工学系教養科目"].map((cat) => (
+              <label key={cat}>
+                <input
+                  type="checkbox"
+                  value={cat}
+                  checked={preferredCategories.includes(cat)}
+                  onChange={() => handleCheckboxChange(cat, setPreferredCategories, preferredCategories)}
+                />
+                {cat}
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="input-group vertical">
+        <label>希望授業名</label>
+        <div className="checkbox-list details-box" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+          {availableCourses.length > 0 ? (
+            availableCourses.map((course) => (
+              <label key={course.code || course.subject_name} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={preferences.includes(course.subject_name)}
+                  onChange={() =>
+                    handleCheckboxChange(course.subject_name, setPreferences, preferences)
+                  }
+                />
+                {course.subject_name} ({course.credit}単位)
+              </label>
+            ))
+          ) : (
+            <p>履修可能科目データがありません。</p>
+          )}
+        </div>
+      </div>
+
+      <div className="input-group vertical">
+        <label>希望時間帯</label>
+        <div className="checkbox-list details-box">
+          {["1限", "2限", "3限", "4限", "5限"].map((time) => (
+            <label key={time}>
               <input
                 type="checkbox"
-                value={day}
-                checked={avoidedDays.includes(day)}
-                onChange={() => handleCheckboxChange(day, setAvoidedDays, avoidedDays)}
+                value={time}
+                checked={preferredTimeSlots.includes(time)}
+                onChange={() => handleCheckboxChange(time, setPreferredTimeSlots, preferredTimeSlots)}
               />
-              {day}
+              {time}
             </label>
           ))}
         </div>
+      </div>
 
+      <div className="input-group">
+        <label>
+          <input
+            type="checkbox"
+            checked={avoidFirstPeriod}
+            onChange={() => setAvoidFirstPeriod(!avoidFirstPeriod)}
+          />
+          1限を避けたい
+        </label>
+      </div>
+
+      <div className="input-group day-preference-group">
+        <label>曜日の希望</label>
         <div>
-          出たい曜日:
-          {["月", "火", "水", "木", "金", "土"].map((day) => (
-            <label key={day}>
-              <input
-                type="checkbox"
-                value={day}
-                checked={preferredDays.includes(day)}
-                onChange={() => handleCheckboxChange(day, setPreferredDays, preferredDays)}
-              />
-              {day}
-            </label>
-          ))}
+          <span>避けたい曜日:</span>
+          <div className="day-selection-group">
+            {["月", "火", "水", "木", "金", "土"].map((day) => (
+              <label key={day}>
+                <input
+                  type="checkbox"
+                  value={day}
+                  checked={avoidedDays.includes(day)}
+                  onChange={() => handleCheckboxChange(day, setAvoidedDays, avoidedDays)}
+                />
+                {day}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div>
+          <span>出たい曜日:</span>
+          <div className="day-selection-group">
+            {["月", "火", "水", "木", "金", "土"].map((day) => (
+              <label key={day}>
+                <input
+                  type="checkbox"
+                  value={day}
+                  checked={preferredDays.includes(day)}
+                  onChange={() => handleCheckboxChange(day, setPreferredDays, preferredDays)}
+                />
+                {day}
+              </label>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -271,4 +503,5 @@ function W6_PreferenceInput() {
 }
 
 export default W6_PreferenceInput;
+
 

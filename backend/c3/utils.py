@@ -1,4 +1,5 @@
-from .models import Subject, Registration, get_session
+from .models import Subject, Registration, get_session, subject
+
 
 def text_replace(text: str):
     text = text.replace("Ｒｅａｄｉｎｇ＆Ｗｒｉｔｉ", "Ｒｅａｄｉｎｇ＆Ｗｒｉｔｉｎｇ　")
@@ -38,10 +39,65 @@ def get_course(code):
             "code": course.code,
             "category": course.category,
             "requirement": course.requirement,
-            "credit": course.credit
+            "credit": course.credit,
+            "semester": course.semester_offered,
+            "year": course.year_offered,
         }
 
     return None
+
+def get_completed_courses(user_id):
+    completed_courses = []
+    session = get_session()
+    courses = session.query(Registration).filter_by(user_id=user_id).all()
+    session.close()
+    for course in courses:
+        details = get_course(course.code)
+        completed_course = {
+            "subject_name": details["subject_name"],
+            "code": details["code"],
+            "grade": None,
+            "category": details["category"],
+            "requirement": details["requirement"],
+            "credit": details["credit"],
+            "semester": details["semester"],
+            "year": details["year"],
+            "time_slot": None,
+            "day_of_week": None,
+            "prerequisites": None
+        }
+        completed_courses.append(completed_course)
+
+    return completed_courses
+
+def get_available_courses(user_id):
+    available_courses = []
+    session = get_session()
+    # completed_courses = session.query(Registration.code).filter_by(user_id=user_id).all()
+    # completed_codes = [row.code for row in completed_courses]
+    # cources = session.query(Subject).filter(~Subject.code.in_(completed_codes)).all()
+    courses = session.query(Subject).all()
+    session.close()
+    for course in courses:
+        available_course = {
+            "subject_name": course.subject_name,
+            "code": course.code,
+            "grade": None,
+            "category": course.category,
+            "requirement": course.requirement,
+            "credit": course.credit,
+            "semester": course.semester_offered,
+            "year": course.year_offered,
+            "time_slot": None,
+            "day_of_week": None,
+            "prerequisites": None
+
+        }
+        available_courses.append(available_course)
+
+    return available_courses
+
+
 
 def make_send_courses(courses: list):
     send_courses = []

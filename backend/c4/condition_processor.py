@@ -20,6 +20,8 @@ class CourseCategory(Enum):
     INFORMATICS = "情報科目"
     HEALTH_PE = "体育健康科目"
     MAJOR = "専門科目"
+    COMMON_ENGINEERING = "共通工学系教養科目"
+    HUMANITIES_SOCIAL = "人文社会系教養科目"
 
 
 class RequirementType(Enum):
