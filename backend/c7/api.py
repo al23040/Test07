@@ -12,10 +12,9 @@ class C7API:
 
     def _register_routes(self):
         @self.app.route('/api/c7/user_conditions/<int:user_id>', methods=['POST'])
-        #def get_user_conditions():
         def get_user_conditions(user_id):
             data = request.get_json()
-            #user_id = int(data['user_id'])
+
             conditions = {
                 "min_units": data.get("min_units"),
                 "max_units": data.get("max_units"),
@@ -35,11 +34,21 @@ class C7API:
                 "completed_courses": completed_courses,
                 "all_courses": all_courses
             }
-            response = requests.post('http://localhost:5000/api/c4/four-year-patterns', json=send_data)
-            data_1 = jsonify(response.json())
-            print(data_1, flush=True)
-            print("Response JSON from /api/c4/four-year-patterns:", response.json(), flush=True)
-            return jsonify(response.json()), 200
+
+        # 4年パターン取得のためC4 APIを呼ぶ
+            c4_response = requests.post('http://localhost:5000/api/c4/four-year-patterns', json=send_data)
+            if c4_response.status_code != 200:
+                return jsonify({"status": "error", "error": "4年パターンの取得に失敗しました"}), 500
+
+            four_year_patterns = c4_response.json()
+
+    # 必要ならここでユーザー条件の保存処理も行う（省略）
+
+            return jsonify({
+                "status": "ok",
+                "message": "条件を受け取りました",
+                "four_year_patterns": four_year_patterns
+            }), 200
 
 def register_c7_api(app: Flask) -> C7API:
     return C7API(app)
