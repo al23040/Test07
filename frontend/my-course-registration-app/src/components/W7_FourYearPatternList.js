@@ -1,5 +1,5 @@
 // frontend/my-course-registration-app/src/components/W7_FourYearPatternList.js
-import React, { useEffect, useState } from 'react';
+/*import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 // 必要なAPI関数をインポート
 import { fetchFourYearPatterns, fetchAllSubjects, fetchUserTakenCourses } from '../api';
@@ -46,6 +46,52 @@ const W7_FourYearPatternList = () => {
       {patterns && patterns.length > 0 ? (
         <ul>
           {patterns.map((pattern) => (
+            <li key={pattern.id}>
+              <Link to={`/patterns/${pattern.id}`}>
+                <h3>{pattern.name}</h3>
+                <p>{pattern.description}</p>
+                <span>総単位数: {pattern.totalUnits}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>表示できる履修パターンがありません。</p>
+      )}
+    </div>
+  );
+};
+
+export default W7_FourYearPatternList;*/
+
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import './W7_FourYearPatternList.css';
+
+const W7_FourYearPatternList = () => {
+  const [patterns, setPatterns] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const storedPatterns = localStorage.getItem('four_year_patterns');
+    if (storedPatterns) {
+      try {
+        setPatterns(JSON.parse(storedPatterns));
+      } catch {
+        setPatterns([]);
+      }
+    }
+    setLoading(false);
+  }, []);
+
+  if (loading) return <div className="loading-container"><div className="loader"></div><p>履修パターンを読み込み中...</p></div>;
+
+  return (
+    <div className="four-year-pattern-list">
+      <h2>4年間の履修パターン</h2>
+      {patterns.length > 0 ? (
+        <ul>
+          {patterns.map(pattern => (
             <li key={pattern.id}>
               <Link to={`/patterns/${pattern.id}`}>
                 <h3>{pattern.name}</h3>
