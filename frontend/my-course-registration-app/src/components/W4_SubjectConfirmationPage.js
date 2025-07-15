@@ -62,6 +62,7 @@ function SubjectConfirmationPage() {
       if (!response.ok) throw new Error('送信に失敗しました');
 
       setMessage('履修科目データを正常に送信しました。');
+      navigate('/preference-input');
     } catch (err) {
       console.error('送信エラー:', err);
       setMessage('送信に失敗しました。data.json をダウンロードします。');
@@ -121,7 +122,6 @@ function SubjectConfirmationPage() {
                     if (value === 0) return null;
                     const labelMap = {
                       university_common_credits: '全学共通科目',
-                      informatics_credits: '情報科目'
                     };
                     return (
                       <li key={categoryKey}>
@@ -135,7 +135,8 @@ function SubjectConfirmationPage() {
                     language_credits: '言語科目',
                     social_sciences_credits: '人文社会系教養科目',
                     major_credits: '専門科目',
-                    PE_health_credits: '共通健康科目'
+                    PE_health_credits: '共通健康科目',
+                    common_engineering_credits:'共通工学系教養科目'
                   };
 
                   const requirementLabelMap = {

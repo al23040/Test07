@@ -20,6 +20,8 @@ class CourseCategory(Enum):
     INFORMATICS = "情報科目"
     HEALTH_PE = "体育健康科目"
     MAJOR = "専門科目"
+    COMMON_ENGINEERING = "共通工学系教養科目"
+    HUMANITIES_SOCIAL = "人文社会系教養科目"
 
 
 class RequirementType(Enum):
@@ -95,7 +97,9 @@ class ConditionProcessor:
             CourseCategory.LANGUAGE: {'compulsory': 8, 'elective': 0},
             CourseCategory.INFORMATICS: {'compulsory': 4, 'elective': 0},
             CourseCategory.HEALTH_PE: {'compulsory': 2, 'elective': 0},
-            CourseCategory.MAJOR: {'compulsory': 40, 'elective': 50}
+            CourseCategory.MAJOR: {'compulsory': 40, 'elective': 50},
+            CourseCategory.COMMON_ENGINEERING: {'compulsory': 0, 'elective': 0},
+            CourseCategory.HUMANITIES_SOCIAL: {'compulsory': 0, 'elective': 6}
         }
         self.total_required_credits = 124
 

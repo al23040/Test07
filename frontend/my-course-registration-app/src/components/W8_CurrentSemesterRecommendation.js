@@ -1,29 +1,42 @@
-// frontend/my-course-registration-app/src/components/W8_CurrentSemesterRecommendation.js
+// src/components/W8_CurrentSemesterRecommendation.js
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-// 必要なAPI関数をインポート
-import { fetchCurrentSemesterRecommendation, fetchAllSubjects, fetchUserTakenCourses } from '../api';
+import { fetchCurrentSemesterRecommendation } from '../api'; // API関数
 import './W8_CurrentSemesterRecommendation.css';
+
+// --- Contextをインポート ---
+import { useAuth } from '../context/AuthContext';
+import { useCourses } from '../context/CoursesContext';
+import { useConditions } from '../context/ConditionsContext';
 
 const W8_CurrentSemesterRecommendation = () => {
   const [recommendationData, setRecommendationData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ユーザーIDと条件を仮で設定します。
-  // 本来はログイン情報やContextから取得する想定です。
-  const userId = 1; 
-  const userConditions = {
-    // 例: 現在の学年や学期などを指定
-  };
+  // --- Contextから必要なデータを取得 ---
+  const { userId } = useAuth();
+  const { completedCourses, allCourses, isLoading: coursesLoading } = useCourses();
+  const { conditions } = useConditions();
 
   useEffect(() => {
+    // 必要なデータが揃うまで待つ
+    if (!userId || coursesLoading) {
+      return;
+    }
+
     const getRecommendation = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const completedCourses = await fetchUserTakenCourses(userId);
-        const allCourses = await fetchAllSubjects();
-        const data = await fetchCurrentSemesterRecommendation(userId, userConditions, completedCourses, allCourses);
+        // ContextのデータをAPI関数に渡す
+        const data = await fetchCurrentSemesterRecommendation(
+          userId,
+          conditions,
+          completedCourses,
+          allCourses
+        );
         setRecommendationData(data);
       } catch (err) {
         setError(err);
@@ -33,9 +46,10 @@ const W8_CurrentSemesterRecommendation = () => {
     };
 
     getRecommendation();
-  }, [userId, JSON.stringify(userConditions)]);
+    // 依存配列にContextの値を追加
+  }, [userId, conditions, completedCourses, allCourses, coursesLoading]);
 
-  if (loading) {
+  if (loading || coursesLoading) {
     return (
       <div className="loading-container">
         <div className="loader"></div>
@@ -45,11 +59,7 @@ const W8_CurrentSemesterRecommendation = () => {
   }
 
   if (error) {
-    return (
-      <div className="error-container">
-        <p>エラー: {error.message}</p>
-      </div>
-    );
+    return <div className="error-container"><p>エラー: {error.message}</p></div>;
   }
 
   if (!recommendationData) {

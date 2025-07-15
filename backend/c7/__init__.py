@@ -1,12 +1,12 @@
-from .RequireInfo import RequireInfo
-from .authorization import Authorization
-from .account_manager import AccountManager
-from .condition_processor import ConditionProcessor, UserConditions
-from .enums import CourseCategory, DayOfWeek
+from c2.authorization import Authorization
+from c5.account_manager import AccountManager
+from c4.condition_processor import ConditionProcessor, UserConditions
+from .api import register_c7_api
+#from .enums import CourseCategory, DayOfWeek
 
 # Optional API import (only if Flask is available)
 try:
-    from .api import register_user_conditions_api
+    from .api import register_c7_api
 
     __all__ = [
         'RequireInfo',
@@ -16,7 +16,7 @@ try:
         'UserConditions',
         'CourseCategory',
         'DayOfWeek',
-        'register_user_conditions_api',
+        'register_c7_api',
     ]
 except ImportError:
     # Flask not available, skip API registration

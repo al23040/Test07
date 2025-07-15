@@ -170,10 +170,10 @@ function SubjectEditPage() {
           <option value="全学共通科目">全学共通科目</option>
           <option value="共通数理科目">共通数理科目</option>
           <option value="言語科目">言語科目</option>
-          <option value="情報科目">情報科目</option>
           <option value="人文社会系教養科目">人文社会系教養科目</option>
           <option value="共通健康科目">共通健康科目</option>
           <option value="専門科目">専門科目</option>
+          <option value='共通工学系教養科目'>共通工学系教養科目</option>
         </select>
         <select
           name="requirement"
@@ -205,4 +205,3 @@ function SubjectEditPage() {
 }
 
 export default SubjectEditPage;
-

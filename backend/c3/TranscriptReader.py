@@ -78,7 +78,6 @@ class TranscriptReader:
                     })
 
             send_courses = utils.make_send_courses(courses)
-            print(f"[DEBUG] send_courses = {send_courses}")
             send_available_courses = utils.make_send_available_courses(self.semester_offered, self.year_offered, send_courses)
             make_send_credits_data = utils.make_send_credits_data(send_courses)
 

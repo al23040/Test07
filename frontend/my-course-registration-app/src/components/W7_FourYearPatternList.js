@@ -1,31 +1,40 @@
-// frontend/my-course-registration-app/src/components/W7_FourYearPatternList.js
+// src/components/W7_FourYearPatternList.js
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-// 必要なAPI関数をインポート
-import { fetchFourYearPatterns, fetchAllSubjects, fetchUserTakenCourses } from '../api';
+import { fetchFourYearPatterns } from '../api'; // API関数
 import './W7_FourYearPatternList.css';
+
+// --- Contextをインポート ---
+import { useAuth } from '../context/AuthContext';
+import { useConditions } from '../context/ConditionsContext';
 
 const W7_FourYearPatternList = () => {
   const [patterns, setPatterns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ユーザーIDと条件を仮で設定（本来は認証情報やContextから取得します）
-  const userId = 1;
-  const userConditions = {
-    // 例: { "max_credits_per_semester": 20, "exclude_field": "humanities" }
-  };
+  // --- Contextから必要なデータを取得 ---
+  const { userId } = useAuth();
+  const { conditions } = useConditions();
 
   useEffect(() => {
+    // ユーザー情報や科目情報がまだ読み込まれていない場合は、処理を開始しない
+    if (!userId || coursesLoading) {
+      return;
+    }
+
     const getPatterns = async () => {
       setLoading(true);
+      setError(null);
       try {
-        // C5から科目データを取得
-        const completedCourses = await fetchUserTakenCourses(userId);
-        const allCourses = await fetchAllSubjects();
-        
-        // C4 APIを呼び出す際に取得したデータを渡す
-        const data = await fetchFourYearPatterns(userId, userConditions, completedCourses, allCourses);
+        // Contextから取得したデータをAPI関数に渡す
+        const data = await fetchFourYearPatterns(
+          userId,
+          conditions,
+          completedCourses,
+          allCourses
+        );
         setPatterns(data);
       } catch (err) {
         setError(err);
@@ -33,13 +42,15 @@ const W7_FourYearPatternList = () => {
         setLoading(false);
       }
     };
-    getPatterns();
-    // userConditionsはオブジェクトなので、JSON.stringifyして比較する
-  }, [userId, JSON.stringify(userConditions)]); 
 
-  if (loading) return <div className="loading-container"><div className="loader"></div><p>履修パターンを生成中...</p></div>;
+    getPatterns();
+    // 依存配列にContextから取得した値を追加
+  }, [userId, conditions, completedCourses, allCourses, coursesLoading]);
+
+  // Contextのデータ読み込み中 + このコンポーネントのデータ読み込み中の両方を考慮
+  if (loading || coursesLoading) return <div className="loading-container"><div className="loader"></div><p>履修パターンを生成中...</p></div>;
   if (error) return <div className="error-container"><p>エラーが発生しました: {error.message}</p></div>;
-  
+
   return (
     <div className="four-year-pattern-list">
       <h2>4年間の履修パターン</h2>

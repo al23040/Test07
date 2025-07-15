@@ -5,6 +5,7 @@ from c2 import register_c2_api
 from c3 import register_c3_api
 from c4 import register_c4_api
 from c5 import register_c5_api, AccountManager
+from c7 import register_c7_api
 import os
 
 app = Flask(__name__, static_folder='static', static_url_path='')
@@ -18,6 +19,7 @@ c2_api = register_c2_api(app)
 c3_api = register_c3_api(app)
 c4_api = register_c4_api(app)  # C4 Condition Processing
 c5_api = register_c5_api(app)  # C5 Account Management
+c7_api = register_c7_api(app)
 
 @app.route('/api/users/login', methods=['POST'])
 def user_login():
