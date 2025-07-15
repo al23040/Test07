@@ -51,7 +51,7 @@ class C7API:
             }), 200
 
         @self.app.route('/api/c7/user_courses/<int:user_id>', methods=['POST'])
-        def get_user_courses(user_id):
+        def get_user_avalablecourses(user_id):
             data = request.get_json()
             conditions = {
                 "min_units": data.get("min_units"),

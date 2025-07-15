@@ -35,8 +35,10 @@ const W7_FourYearPatternList = () => {
           userId: userId,
           conditions: conditions,
         };
-        const allCourses = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
-        const completedCourses = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
+        const resCompleted = await axios.post(`/api/c7/user_allcourses/${userId}`, dataToSend);
+        const resall = await axios.post(`/api/c7/user_allcourses/${userId}`, dataToSend);
+        const completedCourses = resCompleted.data.completed_courses;
+        const allCourses = resall.data.all_courses;
         const data = await fetchFourYearPatterns(
           userId,
           conditions,

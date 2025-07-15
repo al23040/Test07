@@ -18,7 +18,7 @@ const W8_CurrentSemesterRecommendation = () => {
   // --- Contextから必要なデータを取得 ---
   const { userId } = useAuth();
   const { conditions } = useConditions();
-
+  
   useEffect(() => {
     // 必要なデータが揃うまで待つ
     if (!userId) {
@@ -34,14 +34,17 @@ const W8_CurrentSemesterRecommendation = () => {
           userId: userId,
           conditions: conditions,
         };
-        const completedCourses = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
-        const availableCourses = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
+        const resCompleted = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
+        const resAvailable = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
+        const completedCourses = resCompleted.data.completed_courses;
+        const availableCourses = resAvailable.data.available_courses;
         const data = await fetchCurrentSemesterRecommendation(
           userId,
           conditions,
           completedCourses,
           availableCourses
         );
+        console.log(data);
         setRecommendationData(data);
       } catch (err) {
         setError(err);

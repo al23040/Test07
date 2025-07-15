@@ -57,7 +57,11 @@ export const fetchFourYearPatterns = async (userId, conditions, completedCourses
     const response = await fetch(`${BASE_URL}/c4/four-year-patterns`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, conditions, completedCourses, allCourses }),
+      body: JSON.stringify({ 
+        user_id: userId,
+        conditions,
+        completed_courses: completedCourses,
+        all_courses: allCourses }),
     });
     if (!response.ok) throw new Error(`サーバーエラー (status: ${response.status})`);
     return await response.json();
@@ -92,7 +96,11 @@ export const fetchCurrentSemesterRecommendation = async (userId, conditions, com
     const response = await fetch(`${BASE_URL}/c4/current-semester-recommendation`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, conditions, completedCourses, availableCourses }),
+      body: JSON.stringify({ 
+        user_id: userId,
+        conditions,
+        completed_courses: completedCourses,
+        available_courses: availableCourses }),
     });
     if (!response.ok) throw new Error(`サーバーエラー (status: ${response.status})`);
     return await response.json();
