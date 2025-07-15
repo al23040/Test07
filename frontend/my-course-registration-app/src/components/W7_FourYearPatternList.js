@@ -31,6 +31,10 @@ const W7_FourYearPatternList = () => {
       setError(null);
       try {
         // Contextから取得したデータをAPI関数に渡す
+        const dataToSend = {
+          userId: userId,
+          conditions: conditions,
+        };
         const allCourses = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
         const completedCourses = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
         const data = await fetchFourYearPatterns(
@@ -49,7 +53,7 @@ const W7_FourYearPatternList = () => {
 
     getPatterns();
     // 依存配列にContextから取得した値を追加
-  }, [userId, conditions, completedCourses, allCourses]);
+  }, [userId, conditions]);
 
   // Contextのデータ読み込み中 + このコンポーネントのデータ読み込み中の両方を考慮
   if (error) return <div className="error-container"><p>エラーが発生しました: {error.message}</p></div>;

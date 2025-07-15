@@ -30,6 +30,10 @@ const W8_CurrentSemesterRecommendation = () => {
       setError(null);
       try {
         // ContextのデータをAPI関数に渡す
+        const dataToSend = {
+          userId: userId,
+          conditions: conditions,
+        };
         const completedCourses = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
         const availableCourses = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
         const data = await fetchCurrentSemesterRecommendation(
@@ -48,7 +52,7 @@ const W8_CurrentSemesterRecommendation = () => {
 
     getRecommendation();
     // 依存配列にContextの値を追加
-  }, [userId, conditions, completedCourses, allCourses]);
+  }, [userId, conditions]);
 
   if (loading) {
     return (
