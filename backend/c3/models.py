@@ -28,6 +28,16 @@ class Registration(Base):
 
     subject = relationship("Subject", back_populates="registrations")
 
+class AvailableCourse(Base):
+    user_id = Column(Integer, primary_key=True)
+    code = Column(String, primary_key=True)
+    subject_name = Column(String, nullable=False)
+    category = Column(String, nullable=False)
+    requirement = Column(String, nullable=False)
+    credit = Column(Integer, nullable=False)
+    semester_offered = Column(Integer, nullable=False)
+    year_offered = Column(Integer, nullable=False)
+
 engine = create_engine('sqlite:///database.db')  # SQLiteファイル
 Base.metadata.create_all(engine)
 
