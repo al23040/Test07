@@ -98,6 +98,7 @@ class C7API:
                 "all_courses": all_courses
             }
 
+
             return jsonify(send_data), 200
 
 
