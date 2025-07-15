@@ -75,6 +75,31 @@ class C7API:
 
             return jsonify(send_data), 200
 
+        @self.app.route('/api/c7/user_allcourses/<int:user_id>', methods=['POST'])
+        def get_user_allcourses(user_id):
+            data = request.get_json()
+            conditions = {
+                "min_units": data.get("min_units"),
+                "max_units": data.get("max_units"),
+                "preferences": data.get("preferences"),
+                "avoid_first_period": data.get("avoid_first_period"),
+                "preferred_time_slots": data.get("preferred_time_slots"),
+                "preferred_categories": data.get("preferred_categories"),
+                "preferred_days": data.get("preferred_days"),
+                "avoided_days": data.get("avoided_days")
+            }
+            completed_courses = get_completed_courses(user_id)
+            all_courses = get_all_courses(user_id)
+
+            send_data = {
+                "user_id": user_id,
+                "conditions": conditions,
+                "completed_courses": completed_courses,
+                "all_courses": all_courses
+            }
+
+            return jsonify(send_data), 200
+
 
 
 def register_c7_api(app: Flask) -> C7API:
