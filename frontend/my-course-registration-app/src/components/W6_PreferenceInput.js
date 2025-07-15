@@ -78,16 +78,13 @@ function W6_PreferenceInput() {
     };
 
     try {
-      // 1. ユーザー条件送信＋4年パターンも受け取る
       const resCond = await axios.post(`/api/c7/user_conditions/${userId}`, dataToSend);
 
       if (resCond.status === 200 && resCond.data.status === 'ok') {
-      // 4年パターンをローカルストレージに保存
         if (resCond.data.four_year_patterns) {
           localStorage.setItem('four_year_patterns', JSON.stringify(resCond.data.four_year_patterns));
         }
 
-      // 今学期のおすすめ表示ページへ遷移
         navigate('/current-semester-recommendation');
       } else {
         alert(`条件の送信に失敗しました: ${resCond.data.error || '不明なエラー'}`);

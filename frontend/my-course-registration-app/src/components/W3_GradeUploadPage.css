@@ -2,30 +2,30 @@
 .grade-upload-container {
   max-width: 800px;
   margin: 40px auto;
-  border: 1px solid #000; /* 全体の枠線 */
+  border: 1px solid #000; 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 20px; /* 下部の余白 */
+  padding-bottom: 20px; 
 }
 
 .grade-upload-container h2 {
   width: 100%;
   text-align: left;
-  background-color: #e0e0e0; /* ヘッダーの背景色 */
+  background-color: #e0e0e0;
   padding: 10px 20px;
   box-sizing: border-box;
-  font-size: 1.2em; /* フォントサイズ調整 */
-  margin-bottom: 0; /* 下部のマージンをなくす */
+  font-size: 1.2em; 
+  margin-bottom: 0; 
 }
 
 .upload-content {
-  width: calc(100% - 40px); /* 左右の余白を考慮 */
-  margin: 20px 20px 0 20px; /* 上左右のマージン */
-  border: 1px solid #000; /* 内部コンテンツの枠線 */
-  padding: 30px 20px; /* 上下のパディングを増やす */
+  width: calc(100% - 40px); 
+  margin: 20px 20px 0 20px; 
+  border: 1px solid #000; 
+  padding: 30px 20px; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,7 +37,7 @@
   text-align: center;
   font-size: 1.1em;
   line-height: 1.5;
-  margin-bottom: 10px; /* ボタンとの間にスペース */
+  margin-bottom: 10px; 
 }
 
 .file-input-button {
