@@ -99,7 +99,7 @@ class ConditionProcessor:
             CourseCategory.HEALTH_PE: {'compulsory': 2, 'elective': 0},
             CourseCategory.MAJOR: {'compulsory': 40, 'elective': 50},
             CourseCategory.COMMON_ENGINEERING: {'compulsory': 0, 'elective': 0},
-            CourseCategory.HUMANITIES_SOCIAL: {'compulsory': 0, 'elective': 6}
+            CourseCategory.HUMANITIES_SOCIAL: {'compulsory': 6, 'elective': 0}
         }
         self.total_required_credits = 124
 
