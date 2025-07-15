@@ -7,7 +7,6 @@ import './W8_CurrentSemesterRecommendation.css';
 
 // --- Contextをインポート ---
 import { useAuth } from '../context/AuthContext';
-import { useCourses } from '../context/CoursesContext';
 import { useConditions } from '../context/ConditionsContext';
 
 const W8_CurrentSemesterRecommendation = () => {
@@ -17,7 +16,6 @@ const W8_CurrentSemesterRecommendation = () => {
 
   // --- Contextから必要なデータを取得 ---
   const { userId } = useAuth();
-  const { completedCourses, allCourses, isLoading: coursesLoading } = useCourses();
   const { conditions } = useConditions();
 
   useEffect(() => {

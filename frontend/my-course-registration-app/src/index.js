@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals';
 
 // 3つのContextからProviderをインポート
 import { AuthProvider } from './context/AuthContext';
-import { CoursesProvider } from './context/CoursesContext';
 import { ConditionsProvider } from './context/ConditionsContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
