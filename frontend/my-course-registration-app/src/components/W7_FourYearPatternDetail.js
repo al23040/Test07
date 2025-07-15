@@ -69,4 +69,3 @@ const W7_FourYearPatternDetail = () => {
 };
 
 export default W7_FourYearPatternDetail;
-

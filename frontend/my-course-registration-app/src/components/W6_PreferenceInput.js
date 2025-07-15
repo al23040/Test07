@@ -87,7 +87,7 @@ function W6_PreferenceInput() {
           localStorage.setItem('four_year_patterns', JSON.stringify(resCond.data.four_year_patterns));
         }
 
-      // パターン表示ページへ遷移
+      // 今学期のおすすめ表示ページへ遷移
         navigate('/current-semester-recommendation');
       } else {
         alert(`条件の送信に失敗しました: ${resCond.data.error || '不明なエラー'}`);

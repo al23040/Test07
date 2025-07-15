@@ -1,37 +1,45 @@
+// src/components/W8_CurrentSemesterRecommendation.js
+
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { fetchCurrentSemesterRecommendation, fetchAllSubjects, fetchUserTakenCourses } from '../api';
+import { Link } from 'react-router-dom';
+import { fetchCurrentSemesterRecommendation } from '../api'; // API関数
 import './W8_CurrentSemesterRecommendation.css';
+import axios from 'axios';
+
+// --- Contextをインポート ---
+import { useAuth } from '../context/AuthContext';
+import { useConditions } from '../context/ConditionsContext';
 
 const W8_CurrentSemesterRecommendation = () => {
   const [recommendationData, setRecommendationData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
-  const userId = parseInt(localStorage.getItem('user_id'), 10);
-  
+  // --- Contextから必要なデータを取得 ---
+  const { userId } = useAuth();
+  const { conditions } = useConditions();
+
   useEffect(() => {
+    // 必要なデータが揃うまで待つ
     if (!userId) {
-      alert("ユーザーIDが見つかりません。ログインしてください。");
-      navigate('/login');
       return;
     }
 
-    const userConditions = {
-      max_credits_per_semester: 20,
-      exclude_field: 'none'
-    };
-
     const getRecommendation = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const completedCourses = await fetchUserTakenCourses(userId);
-        const allCourses = await fetchAllSubjects();
-        const data = await fetchCurrentSemesterRecommendation(userId, userConditions, completedCourses, allCourses);
+        // ContextのデータをAPI関数に渡す
+        const completedCourses = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
+        const availableCourses = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
+        const data = await fetchCurrentSemesterRecommendation(
+          userId,
+          conditions,
+          completedCourses,
+          availableCourses
+        );
         setRecommendationData(data);
       } catch (err) {
-        console.error(err.response?.data || err.message);
         setError(err);
       } finally {
         setLoading(false);
@@ -39,7 +47,8 @@ const W8_CurrentSemesterRecommendation = () => {
     };
 
     getRecommendation();
-  }, [userId, navigate]);
+    // 依存配列にContextの値を追加
+  }, [userId, conditions, completedCourses, allCourses]);
 
   if (loading) {
     return (
@@ -51,11 +60,7 @@ const W8_CurrentSemesterRecommendation = () => {
   }
 
   if (error) {
-    return (
-      <div className="error-container">
-        <p>エラー: {error.message}</p>
-      </div>
-    );
+    return <div className="error-container"><p>エラー: {error.message}</p></div>;
   }
 
   if (!recommendationData) {
@@ -121,4 +126,3 @@ const W8_CurrentSemesterRecommendation = () => {
 };
 
 export default W8_CurrentSemesterRecommendation;
-
