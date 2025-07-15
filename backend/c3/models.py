@@ -29,6 +29,7 @@ class Registration(Base):
     subject = relationship("Subject", back_populates="registrations")
 
 class AvailableCourse(Base):
+    __tablename__ = 'available_courses'
     user_id = Column(Integer, primary_key=True)
     code = Column(String, primary_key=True)
     subject_name = Column(String, nullable=False)
