@@ -59,7 +59,7 @@ class ConditionParser:
                     )
                     all_patterns.extend(patterns)
                 except Exception as e:
-                    print(f"Error executing handler {handler_name}: {e}")
+                    print(f"Error executing handler {handler_name}: {str(e)}")
                     continue
 
         # If no specific handlers were triggered, use default balanced approach
