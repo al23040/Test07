@@ -1,5 +1,5 @@
 // src/api.js
-
+import axios from 'axios';
 const BASE_URL = '/api';
 
 /**
@@ -74,11 +74,18 @@ export const fetchFourYearPatterns = async (userId, conditions, completedCourses
 /**
  * 4年間の履修パターンの詳細を取得します。
  */
-export const fetchFourYearPatternDetail = async (patternId) => {
+export const fetchFourYearPatternDetail = async (patternId, userId, conditions, completedCourses, allCourses) => {
   try {
-    // 詳細取得なのでGETメソッドを使用します
-    const response = await fetch(`${BASE_URL}/c4/patterns/${patternId}`, { 
-      method: 'GET' 
+    const response = await fetch(`${BASE_URL}/c4/four-year-patterns`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pattern_id: patternId,
+        user_id: userId,
+        conditions,
+        completed_courses: completedCourses,
+        all_courses: allCourses,
+      }),
     });
     if (!response.ok) throw new Error(`サーバーエラー (status: ${response.status})`);
     return await response.json();

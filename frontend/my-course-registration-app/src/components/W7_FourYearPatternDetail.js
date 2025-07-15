@@ -1,20 +1,45 @@
 // frontend/my-course-registration-app/src/components/W7_FourYearPatternDetail.js
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { fetchFourYearPatternDetail } from '../api'; // 作成したAPI関数をインポート
-import './W7_FourYearPatternDetail.css'; // 対応するCSSファイルをインポート
+import { fetchFourYearPatternDetail } from '../api';
+import { useAuth } from '../context/AuthContext';
+import { useConditions } from '../context/ConditionsContext';
+import axios from 'axios';
+import './W7_FourYearPatternDetail.css';
 
 const W7_FourYearPatternDetail = () => {
-  const { patternId } = useParams(); // URLからパターンIDを取得 (例: /patterns/dummy_pattern_1)
+  const { patternId } = useParams();
   const [patternDetail, setPatternDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { userId } = useAuth();
+  const { conditions } = useConditions();
+  const [completedCourses, setCompletedCourses] = useState(null);
+  const [allCourses, setAllCourses] = useState(null);
+
   useEffect(() => {
-    const getDetail = async () => {
+    const getCourseData = async () => {
+      if (!userId) return;
       setLoading(true);
       try {
-        const data = await fetchFourYearPatternDetail(patternId);
+        const dataToSend = { userId, conditions };
+        const response = await axios.post(`/api/c7/user_allcourses/${userId}`, dataToSend);
+        setCompletedCourses(response.data.completed_courses);
+        setAllCourses(response.data.all_courses);
+      } catch (err) {
+        setError(err);
+      }
+    };
+    getCourseData();
+  }, [userId, conditions]);
+
+  useEffect(() => {
+    if (!userId || !completedCourses || !allCourses) return;
+
+    const getDetail = async () => {
+      try {
+        const data = await fetchFourYearPatternDetail(patternId, userId, conditions, completedCourses, allCourses);
         setPatternDetail(data);
       } catch (err) {
         setError(err);
@@ -23,7 +48,7 @@ const W7_FourYearPatternDetail = () => {
       }
     };
     getDetail();
-  }, [patternId]); // patternIdが変わったら再取得
+  }, [patternId, userId, conditions, completedCourses, allCourses]);
 
   if (loading) {
     return <div className="loading-container"><div className="loader"></div><p>パターン詳細を読み込み中...</p></div>;
@@ -50,7 +75,7 @@ const W7_FourYearPatternDetail = () => {
           <section key={index} className="semester-card">
             <h3>{semester.year}年次 {semester.semester}</h3>
             <ul className="course-list-detail">
-              {semester.courses.map((course, courseIndex) => (
+              {semester.courses && semester.courses.map((course, courseIndex) => (
                 <li key={courseIndex}>
                   <span className="course-name">{course.name}</span>
                   <span className="course-credits">{course.credits}単位</span>
