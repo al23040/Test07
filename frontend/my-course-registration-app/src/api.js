@@ -1,24 +1,17 @@
 // src/api.js
 
-const BASE_URL = './api';
+const BASE_URL = '/api';
 
 /**
  * ユーザーログイン (C5 API)
- * @param {string} userId - ユーザーID
- * @param {string} password - パスワード
- * @returns {Promise<Object>} ログイン成功時のデータ（例: { message: "Login successful", user: { id: "12345" } }）
- * @throws {Error} ログイン失敗時のエラー
  */
 export const loginUser = async (userId, password) => {
   try {
-    const response = await fetch(`${BASE_URL}/c5/users/login`, { // C5のAPIエンドポイントに修正
+    const response = await fetch(`${BASE_URL}/c5/users/login`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user_id: userId, password }),
     });
-
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || 'Login failed');
@@ -32,21 +25,14 @@ export const loginUser = async (userId, password) => {
 
 /**
  * ユーザー登録 (C5 API)
- * @param {string} userId - ユーザーID
- * @param {string} password - パスワード
- * @returns {Promise<Object>} 登録成功時のデータ（例: { message: "User registered successfully", user: { id: "new_user" } }）
- * @throws {Error} 登録失敗時のエラー
  */
 export const registerUser = async (userId, password) => {
   try {
-    const response = await fetch(`${BASE_URL}/c5/users/register`, { // C5のAPIエンドポイントに修正
+    const response = await fetch(`${BASE_URL}/c5/users/register`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user_id: userId, password }),
     });
-
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || 'Registration failed');
@@ -59,124 +45,94 @@ export const registerUser = async (userId, password) => {
 };
 
 
-// C4 APIエンドポイント
+// ===============================================================
+// C4のAPI
+// ===============================================================
 
 /**
- * 現在の学年に応じた今学期のおすすめ履修データを取得する。(C4 API)
- * @param {number} userId - ユーザーID
- * @param {Object} conditions - ユーザーが設定した条件
- * @returns {Promise<Object>} 今学期のおすすめデータ
+ * 4年間の履修パターンリストを取得します。
  */
-export const fetchCurrentSemesterRecommendation = async (userId, conditions) => {
+export const fetchFourYearPatterns = async (userId, conditions, completedCourses, allCourses) => {
   try {
-    console.log(`API: C4から今学期のおすすめ履修 (ユーザー: ${userId}) データを取得中...`);
-    const response = await fetch(`${BASE_URL}/c4/current-semester-recommendation`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // バックエンドの期待する形式に合わせて調整
-      // test_c4.pyのapi_requestを見ると、user_idとconditions以外に
-      // completed_coursesとavailable_coursesも必要そうなので追加
-      body: JSON.stringify({
-        user_id: userId,
-        conditions: conditions,
-        // 仮のデータ。実際にはC5から取得する必要がある
-        completed_courses: [], // ここにユーザーが履修済みの科目をC5から取得して渡す
-        available_courses: []  // ここに利用可能な全科目をC5から取得して渡す
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching current semester recommendation from C4:", error);
-    throw error;
-  }
-};
-
-/**
- * 4年間の履修パターンリストを取得する。(C4 API)
- * @param {number} userId - ユーザーID
- * @param {Object} conditions - ユーザーが設定した条件
- * @returns {Promise<Array<Object>>} 4年間の履修パターンデータの配列
- */
-export const fetchFourYearPatterns = async (userId, conditions) => {
-  try {
-    console.log(`API: C4から4年間の履修パターン (ユーザー: ${userId}) データを取得中...`);
     const response = await fetch(`${BASE_URL}/c4/four-year-patterns`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // バックエンドの期待する形式に合わせて調整
-      // test_c4.pyのapi_requestを見ると、user_idとconditions以外に
-      // completed_coursesとavailable_coursesも必要そうなので追加
-      body: JSON.stringify({
-        user_id: userId,
-        conditions: conditions,
-        // 仮のデータ。実際にはC5から取得する必要がある
-        completed_courses: [], // ここにユーザーが履修済みの科目をC5から取得して渡す
-        all_courses: []  // ここに利用可能な全科目をC5から取得して渡す
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, conditions, completedCourses, allCourses }),
     });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
+    if (!response.ok) throw new Error(`サーバーエラー (status: ${response.status})`);
+    return await response.json();
   } catch (error) {
-    console.error("Error fetching four year patterns from C4:", error);
+    console.error("4年間履修パターンの取得に失敗:", error);
     throw error;
   }
 };
 
-// C5のREADMEに記載されているその他のAPIエンドポイント (必要に応じて追加)
-// これらの関数は、C5から科目やユーザーの履修履歴を取得するために使用されます。
-// 現状のC4 API呼び出しではダミーデータで済ませていますが、最終的にはここから取得したデータを使うべきです。
-
 /**
- * 全科目のリストを取得する (C5 API)
- * @returns {Promise<Array<Object>>} 全科目のリスト
+ * 4年間の履修パターンの詳細を取得します。
  */
-export const fetchAllSubjects = async () => {
-    try {
-        console.log("API: C5から全科目データを取得中...");
-        const response = await fetch(`${BASE_URL}/c5/subjects`); // C5のAPIエンドポイントに修正
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        return data.subjects; // subjectsリストを直接返す
-    } catch (error) {
-        console.error("Error fetching all subjects from C5:", error);
-        throw error;
-    }
+export const fetchFourYearPatternDetail = async (patternId) => {
+  try {
+    // 詳細取得なのでGETメソッドを使用します
+    const response = await fetch(`${BASE_URL}/c4/patterns/${patternId}`, { 
+      method: 'GET' 
+    });
+    if (!response.ok) throw new Error(`サーバーエラー (status: ${response.status})`);
+    return await response.json();
+  } catch (error) {
+    console.error("履修パターン詳細の取得に失敗しました:", error);
+    throw error;
+  }
 };
 
 /**
- * ユーザーの履修済み科目リストを取得する (C5 API)
- * @param {string} userId - ユーザーID
- * @returns {Promise<Array<Object>>} ユーザーの履修済み科目リスト
+ * 今学期のおすすめ履修データを取得します。
+ */
+export const fetchCurrentSemesterRecommendation = async (userId, conditions, completedCourses, availableCourses) => {
+  try {
+    const response = await fetch(`${BASE_URL}/c4/current-semester-recommendation`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, conditions, completedCourses, availableCourses }),
+    });
+    if (!response.ok) throw new Error(`サーバーエラー (status: ${response.status})`);
+    return await response.json();
+  } catch (error) {
+    console.error("今学期のおすすめ履修の取得に失敗しました:", error);
+    throw error;
+  }
+};
+
+
+// ===============================================================
+// C5のAPI
+// ===============================================================
+
+/**
+ * 全科目のリストを取得します。
+ */
+export const fetchAllSubjects = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/c5/subjects`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    return data.subjects || [];
+  } catch (error) {
+    console.error("全科目リストの取得に失敗しました:", error);
+    throw error;
+  }
+};
+
+/**
+ * ユーザーの履修済み科目リストを取得します。
  */
 export const fetchUserTakenCourses = async (userId) => {
-    try {
-        console.log(`API: C5からユーザー ${userId} の履修済み科目データを取得中...`);
-        const response = await fetch(`${BASE_URL}/c5/users/${userId}/courses`); // C5のAPIエンドポイントに修正
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        return data.completed_courses; // completed_coursesリストを直接返す
-    } catch (error) {
-        console.error(`Error fetching user ${userId} taken courses from C5:`, error);
-        throw error;
-    }
+  try {
+    const response = await fetch(`${BASE_URL}/c5/users/${userId}/courses`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    return data.completed_courses || [];
+  } catch (error) {
+    console.error(`履修済み科目リストの取得に失敗しました:`, error);
+    throw error;
+  }
 };
