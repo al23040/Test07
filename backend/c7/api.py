@@ -43,7 +43,6 @@ class C7API:
             four_year_patterns = c4_response.json()
 
     # 必要ならここでユーザー条件の保存処理も行う（省略）
-
             return jsonify({
                 "status": "ok",
                 "message": "条件を受け取りました",
@@ -72,6 +71,7 @@ class C7API:
                 "completed_courses": completed_courses,
                 "available_courses": available_courses
             }
+
 
             return jsonify(send_data), 200
 

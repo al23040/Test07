@@ -120,6 +120,9 @@ def get_available_courses(user_id):
     return available_courses
 
 def submit_available_courses(user_id, semester_offered: int, year_offered: int):
+    base_year = 2023
+    limit_grade = year_offered - base_year + 1
+    year_offered = limit_grade
     if semester_offered == 1:
         next_year = year_offered
         next_semester = 2
@@ -132,9 +135,12 @@ def submit_available_courses(user_id, semester_offered: int, year_offered: int):
     session = get_session()
     courses = session.query(Subject).all()
     available_courses = []
+    print(year_offered, semester_offered)
     for course in courses:
         if int(course.year_offered) == next_year and int(course.semester_offered) == next_semester:
             available_courses.append(course)
+    for course in available_courses:
+        print(course.code, course.subject_name, course.year_offered, course.semester_offered, flush=True)
 
     session.query(AvailableCourse).filter_by(user_id=user_id).delete()
     for course in available_courses:
