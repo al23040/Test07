@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import './W6_PreferenceInput.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useConditions } from '../context/ConditionsContext';
 
 function W6_PreferenceInput() {
   const navigate = useNavigate();
   const userId = parseInt(localStorage.getItem('user_id'), 10) || null;
+  const { setConditions } = useConditions();
 
   const [minUnits, setMinUnits] = useState('');
   const [maxUnits, setMaxUnits] = useState('');
@@ -76,6 +78,17 @@ function W6_PreferenceInput() {
       preferred_days: preferredDays,
       avoided_days: avoidedDays
     };
+
+    setConditions({
+      min_units: parseInt(minUnits, 10),
+      max_units: parseInt(maxUnits, 10),
+      preferences: preferences,
+      avoid_first_period: avoidFirstPeriod,
+      preferred_time_slots: preferredTimeSlots.map(time => time.replace('限', '')),
+      preferred_categories: preferredCategories,
+      preferred_days: preferredDays,
+      avoided_days: avoidedDays
+    });
 
     try {
       const resCond = await axios.post(`/api/c7/user_conditions/${userId}`, dataToSend);

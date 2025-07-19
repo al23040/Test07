@@ -34,23 +34,27 @@ const W8_CurrentSemesterRecommendation = () => {
       setLoading(true);
       setError(null);
       try {
+        console.log('Sending to API:', { userId, conditions });
         // ContextのデータをAPI関数に渡す
         const dataToSend = {
           userId: userId,
           conditions: conditions,
         };
-        const resCompleted = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
-        const resAvailable = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
-        const completedCourses = resCompleted.data.completed_courses;
-        const availableCourses = resAvailable.data.available_courses;
+        const response = await axios.post(`/api/c7/user_courses/${userId}`, dataToSend);
+        console.log('API Response:', response.data);
+        const completedCourses = response.data.completed_courses;
+        const availableCourses = response.data.available_courses;
+        console.log('Courses Data:', { completedCourses, availableCourses });
         const data = await fetchCurrentSemesterRecommendation(
           userId,
           conditions,
           completedCourses,
           availableCourses
         );
+        console.log('Final Recommendation Data:', data);
         setRecommendationData(data);
       } catch (err) {
+        console.error('An error occurred:', err);
         setError(err);
       } finally {
         setLoading(false);
@@ -81,8 +85,7 @@ const W8_CurrentSemesterRecommendation = () => {
  return (
     <div className="recommendation-container">
       <header className="recommendation-header">
-        <h1>{recommendationData.year}年度 {recommendationData.semester}のおすすめ履修</h1>
-        <p className="summary-message">{recommendationData.notes}</p>
+        <h1>今学期のおすすめ履修</h1>
         <div className="summary-meta">
           <span>推奨単位数: <strong>{calculateTotalCredits(recommendationData.recommendedSubjects)}</strong></span>
         </div>

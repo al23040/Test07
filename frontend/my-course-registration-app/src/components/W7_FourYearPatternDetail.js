@@ -25,6 +25,7 @@ const W7_FourYearPatternDetail = () => {
       try {
         const dataToSend = { userId, conditions };
         const response = await axios.post(`/api/c7/user_allcourses/${userId}`, dataToSend);
+        console.log('API Response:', response.data); 
         setCompletedCourses(response.data.completed_courses);
         setAllCourses(response.data.all_courses);
       } catch (err) {
@@ -35,13 +36,22 @@ const W7_FourYearPatternDetail = () => {
   }, [userId, conditions]);
 
   useEffect(() => {
+    console.log('Dependencies for getDetail:', {
+        patternId,
+        userId,
+        conditions,
+        completedCourses,
+        allCourses
+    });
     if (!userId || !completedCourses || !allCourses) return;
 
     const getDetail = async () => {
       try {
         const data = await fetchFourYearPatternDetail(patternId, userId, conditions, completedCourses, allCourses);
+        console.log('Pattern Detail Data:', data);
         setPatternDetail(data);
       } catch (err) {
+        console.error('getDetail Error:', err);
         setError(err);
       } finally {
         setLoading(false);
