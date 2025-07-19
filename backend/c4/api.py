@@ -146,16 +146,36 @@ class C4API:
                     else:
                         return jsonify({'error': 'Pattern not found'}), 404
                 else:
-                    # Return summary of all patterns
-                    pattern_summaries = [
-                        {
+                    # Return summary of all patterns with recommendedSubjects
+                    pattern_summaries = []
+                    for pattern in patterns:
+                        # Extract all courses from all semesters in the pattern
+                        all_courses_in_pattern = []
+                        for year_patterns in pattern.yearly_patterns:
+                            for semester_pattern in year_patterns:
+                                all_courses_in_pattern.extend(semester_pattern.courses)
+                        
+                        # Format courses as recommendedSubjects (same format as current-semester endpoint)
+                        recommended_subjects = [
+                            {
+                                'id': course.code,
+                                'name': course.subject_name,
+                                'units': course.credit,
+                                'category': course.category.value,
+                                'semester': '前期' if course.semester == 1 else '後期'
+                            }
+                            for course in all_courses_in_pattern
+                        ]
+                        
+                        pattern_summary = {
                             'id': pattern.pattern_id,
                             'name': f'パターン{pattern.pattern_id.replace("pattern", "")}',
                             'description': pattern.description,
-                            'totalUnits': pattern.total_credits
+                            'totalUnits': pattern.total_credits,
+                            'recommendedSubjects': recommended_subjects
                         }
-                        for pattern in patterns
-                    ]
+                        pattern_summaries.append(pattern_summary)
+                    
                     response_data = pattern_summaries
 
                 return jsonify(response_data), 200
