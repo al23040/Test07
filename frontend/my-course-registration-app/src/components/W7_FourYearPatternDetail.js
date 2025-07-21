@@ -1,7 +1,10 @@
-// src/components/W7_FourYearPatternDetail.js
+// frontend/my-course-registration-app/src/components/W7_FourYearPatternDetail.js
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { fetchFourYearPatterns } from '../api';
+import { fetchFourYearPatternDetail } from '../api';
+import { useAuth } from '../context/AuthContext';
+import { useConditions } from '../context/ConditionsContext';
+import axios from 'axios';
 import './W7_FourYearPatternDetail.css';
 
 const W7_FourYearPatternDetail = () => {
@@ -10,102 +13,96 @@ const W7_FourYearPatternDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 仮のユーザーIDと条件。実際にはログイン情報や希望条件入力画面から取得する
-  const userId = 12345; // ログインしているユーザーのIDに置き換える
-  const userConditions = {
-    min_units: 16,
-    max_units: 20,
-    preferences: ["balanced"],
-    avoid_first_period: false,
-    preferred_time_slots: [],
-    preferred_categories: [],
-    preferred_days: [],
-    avoided_days: []
-  };
+  const { userId } = useAuth();
+  const { conditions } = useConditions();
+  const [completedCourses, setCompletedCourses] = useState(null);
+  const [allCourses, setAllCourses] = useState(null);
 
   useEffect(() => {
-    const getPatternDetail = async () => {
-      if (!patternId) {
-        setError(new Error("パターンIDが指定されていません。"));
-        setLoading(false);
-        return;
-      }
+    const getCourseData = async () => {
+      if (!userId) return;
+      setLoading(true);
       try {
-        // 全パターンを取得し、その中からpatternIdに一致するものを探す
-        // より効率的なのは、C4に個別のパターン詳細を取得するAPIを追加すること
-        const allPatterns = await fetchFourYearPatterns(userId, userConditions);
-        const detail = allPatterns.find(p => p.id === patternId);
-        if (detail) {
-          setPatternDetail(detail);
-        } else {
-          setError(new Error("指定されたパターンが見つかりませんでした。"));
-        }
+        const dataToSend = { userId, conditions };
+        const response = await axios.post(`/api/c7/user_allcourses/${userId}`, dataToSend);
+        console.log('API Response:', response.data); 
+        setCompletedCourses(response.data.completed_courses);
+        setAllCourses(response.data.all_courses);
       } catch (err) {
+        setError(err);
+      }
+    };
+    getCourseData();
+  }, [userId, conditions]);
+
+  useEffect(() => {
+    console.log('Dependencies for getDetail:', {
+        patternId,
+        userId,
+        conditions,
+        completedCourses,
+        allCourses
+    });
+    if (!userId || !completedCourses || !allCourses) return;
+
+    const getDetail = async () => {
+      try {
+        const data = await fetchFourYearPatternDetail(patternId, userId, conditions, completedCourses, allCourses);
+        console.log('Pattern Detail Data:', data);
+        setPatternDetail(data);
+      } catch (err) {
+        console.error('getDetail Error:', err);
         setError(err);
       } finally {
         setLoading(false);
       }
     };
-    getPatternDetail();
-  }, [patternId, userId, JSON.stringify(userConditions)]);
+    getDetail();
+  }, [patternId, userId, conditions, completedCourses, allCourses]);
 
   if (loading) {
-    return <div className="loading">履修パターン詳細をロード中...</div>;
+    return <div className="loading-container"><div className="loader"></div><p>パターン詳細を読み込み中...</p></div>;
   }
-
   if (error) {
-    return <div className="error">データのロードに失敗しました: {error.message}</div>;
+    return <div className="error-container"><p>エラー: {error.message}</p></div>;
   }
-
   if (!patternDetail) {
-    return <div className="no-data">履修パターン詳細が見つかりませんでした。</div>;
+    return <p>パターンの詳細が見つかりません。</p>;
   }
-
-  const days = ['月', '火', '水', '木', '金'];
-  // 時間割の時限は、取得したデータに合わせて調整
-  // 現状のC4出力では '1限', '2限' の形式なので、それに合わせる
-  const periods = ['1限', '2限', '3限', '4限', '5限'];
-
 
   return (
-    <div className="four-year-pattern-detail">
-      <h2>{patternDetail.name} の詳細</h2>
-      <p className="description">{patternDetail.description}</p>
-      <p className="total-units">総取得単位数: {patternDetail.totalUnits}</p>
-
-      <h3>4年間の時間割</h3>
-      {patternDetail.semesters.map(semester => (
-        <div key={`${semester.year}-${semester.semester}`} className="semester-schedule">
-          <h4>{semester.year}年生 {semester.semester}</h4>
-          <table className="timetable" border="1">
-            <thead>
-              <tr>
-                <th>時間</th>
-                {days.map(day => <th key={day}>{day}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {periods.map(period => (
-                <tr key={period}>
-                  <td>{period}</td>
-                  {days.map(day => (
-                    <td key={`${day}-${period}`}>
-                      {/* C4からのデータはオブジェクトのvalueとして科目名が来る想定 */}
-                      {semester.schedule[day] && semester.schedule[day][period]
-                        ? semester.schedule[day][period]
-                        : ''}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p>この学期で取得予定の単位数: {semester.totalCredits}</p>
+    <div className="pattern-detail-container">
+      <header className="pattern-detail-header">
+        <h1>{patternDetail.name}</h1>
+        <p className="pattern-description">{patternDetail.description}</p>
+        <div className="pattern-meta">
+          <span>総単位数: <strong>{patternDetail.totalUnits}</strong></span>
         </div>
-      ))}
-      <Link to="/patterns" className="back-button">
-        全パターンに戻る
-      </Link>
+      </header>
+
+      <section className="course-section">
+        <h2>推奨科目リスト</h2>
+        {patternDetail.recommendedSubjects && patternDetail.recommendedSubjects.length > 0 ? (
+          <ul className="course-list-detail">
+            {patternDetail.recommendedSubjects.map((course) => (
+              <li key={course.id}>
+                <div className="course-info">
+                  <span className="course-name">{course.name}</span>
+                  <span className="course-details">
+                    {course.year}年次 {course.semester} / {course.category} / {course.units}単位
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>推奨される科目は見つかりませんでした。</p>
+        )}
+      </section>
+
+      <footer className="pattern-detail-footer">
+        <Link to="/patterns" className="back-link">← パターン一覧へ戻る</Link>
+      </footer>
     </div>
   );
 };

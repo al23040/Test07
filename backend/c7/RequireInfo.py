@@ -1,6 +1,7 @@
+#/backend/c7/RequireInfo
 from c4.condition_processor import ConditionProcessor, UserConditions
 from typing import Optional, Dict, List
-from c4.enums import CourseCategory, DayOfWeek
+from c4.condition_processor import CourseCategory, DayOfWeek
 
 class RequireInfo:
 

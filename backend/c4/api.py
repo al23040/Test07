@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from typing import List, Dict, Optional, Any
 import json
 from datetime import datetime
+import traceback
 
 from .condition_processor import ConditionProcessor, UserConditions, Course, CourseCategory, RequirementType, DayOfWeek
 from .condition_parser import ConditionParser
@@ -34,7 +35,6 @@ class C4API:
             """
             try:
                 data = request.get_json()
-
                 # Validate required fields
                 required_fields = ['user_id', 'conditions', 'completed_courses', 'available_courses']
                 for field in required_fields:
@@ -46,7 +46,6 @@ class C4API:
                 conditions_dict = data['conditions']
                 completed_courses = self._parse_courses(data['completed_courses'])
                 available_courses = self._parse_courses(data['available_courses'])
-
                 # Convert conditions to UserConditions object
                 user_conditions = self._parse_user_conditions(conditions_dict)
 
@@ -113,7 +112,6 @@ class C4API:
             """
             try:
                 data = request.get_json()
-
                 # Validate required fields
                 required_fields = ['user_id', 'conditions', 'completed_courses', 'all_courses']
                 for field in required_fields:
@@ -137,35 +135,75 @@ class C4API:
                     all_courses
                 )
 
-                # Convert to JSON response matching frontend format
-                pattern_id = data.get('pattern_id')  # Check if specific pattern requested
+                pattern_id = data.get('pattern_id')
                 
                 if pattern_id:
-                    # Return specific pattern details
                     found_pattern = next((p for p in patterns if p.pattern_id == pattern_id), None)
                     if found_pattern:
-                        response_data = self._plan_pattern_to_dict(found_pattern)
+                        all_courses_in_pattern = []
+                        for year_patterns in found_pattern.yearly_patterns:
+                            for semester_pattern in year_patterns:
+                                all_courses_in_pattern.extend(semester_pattern.courses)
+                        
+                        recommended_subjects = [
+                            {
+                                'id': course.code,
+                                'name': course.subject_name,
+                                'units': course.credit,
+                                'category': course.category.value,
+                                'semester': '前期' if course.semester == 1 else '後期',
+                                'year': course.year
+                            }
+                            for course in all_courses_in_pattern
+                        ]
+                        
+                        response_data = {
+                            'id': found_pattern.pattern_id,
+                            'name': f'パターン{found_pattern.pattern_id.replace("pattern", "")}',
+                            'description': found_pattern.description,
+                            'totalUnits': found_pattern.total_credits,
+                            'recommendedSubjects': recommended_subjects
+                        }
                     else:
                         return jsonify({'error': 'Pattern not found'}), 404
                 else:
-                    # Return summary of all patterns
-                    pattern_summaries = [
-                        {
+                    pattern_summaries = []
+                    for pattern in patterns:
+                        all_courses_in_pattern = []
+                        for year_patterns in pattern.yearly_patterns:
+                            for semester_pattern in year_patterns:
+                                all_courses_in_pattern.extend(semester_pattern.courses)
+                        
+                        recommended_subjects = [
+                            {
+                                'id': course.code,
+                                'name': course.subject_name,
+                                'units': course.credit,
+                                'category': course.category.value,
+                                'semester': '前期' if course.semester == 1 else '後期',
+                                'year': course.year
+                            }
+                            for course in all_courses_in_pattern
+                        ]
+                        
+                        pattern_summary = {
                             'id': pattern.pattern_id,
                             'name': f'パターン{pattern.pattern_id.replace("pattern", "")}',
                             'description': pattern.description,
-                            'totalUnits': pattern.total_credits
+                            'totalUnits': pattern.total_credits,
+                            'recommendedSubjects': recommended_subjects
                         }
-                        for pattern in patterns
-                    ]
+                        pattern_summaries.append(pattern_summary)
+                    
                     response_data = pattern_summaries
 
                 return jsonify(response_data), 200
 
             except Exception as e:
+                print(traceback.format_exc())
                 return jsonify({
                     'status': 'error',
-                    'message': str(e),
+                    'message': 'エラーの発生',
                     'timestamp': datetime.now().isoformat()
                 }), 500
 
@@ -317,7 +355,9 @@ class C4API:
             '言語科目': CourseCategory.LANGUAGE,
             '情報科目': CourseCategory.INFORMATICS,
             '体育健康科目': CourseCategory.HEALTH_PE,
-            '専門科目': CourseCategory.MAJOR
+            '専門科目': CourseCategory.MAJOR,
+            '共通工学系教養科目': CourseCategory.COMMON_ENGINEERING,  
+            '人文社会系教養科目': CourseCategory.HUMANITIES_SOCIAL,    
         }
 
         for cat_str in category_strings:

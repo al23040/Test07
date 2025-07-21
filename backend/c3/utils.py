@@ -1,4 +1,5 @@
-from .models import Subject, Registration, get_session
+from .models import Subject, Registration, AvailableCourse,get_session, subject
+
 
 def text_replace(text: str):
     text = text.replace("Ｒｅａｄｉｎｇ＆Ｗｒｉｔｉ", "Ｒｅａｄｉｎｇ＆Ｗｒｉｔｉｎｇ　")
@@ -38,10 +39,129 @@ def get_course(code):
             "code": course.code,
             "category": course.category,
             "requirement": course.requirement,
-            "credit": course.credit
+            "credit": course.credit,
+            "semester": course.semester_offered,
+            "year": course.year_offered,
         }
 
     return None
+
+def get_completed_courses(user_id):
+    completed_courses = []
+    session = get_session()
+    courses = session.query(Registration).filter_by(user_id=user_id).all()
+    session.close()
+    for course in courses:
+        details = get_course(course.code)
+        completed_course = {
+            "subject_name": details["subject_name"],
+            "code": details["code"],
+            "grade": None,
+            "category": details["category"],
+            "requirement": details["requirement"],
+            "credit": details["credit"],
+            "semester": details["semester"],
+            "year": details["year"],
+            "time_slot": None,
+            "day_of_week": None,
+            "prerequisites": None
+        }
+        completed_courses.append(completed_course)
+
+    return completed_courses
+
+def get_all_courses(user_id):
+    all_courses = []
+    session = get_session()
+    # completed_courses = session.query(Registration.code).filter_by(user_id=user_id).all()
+    # completed_codes = [row.code for row in completed_courses]
+    # cources = session.query(Subject).filter(~Subject.code.in_(completed_codes)).all()
+    courses = session.query(Subject).all()
+    session.close()
+    for course in courses:
+        all_course = {
+            "subject_name": course.subject_name,
+            "code": course.code,
+            "grade": None,
+            "category": course.category,
+            "requirement": course.requirement,
+            "credit": course.credit,
+            "semester": course.semester_offered,
+            "year": course.year_offered,
+            "time_slot": None,
+            "day_of_week": None,
+            "prerequisites": None
+
+        }
+        all_courses.append(all_course)
+
+    return all_courses
+
+def get_available_courses(user_id):
+    available_courses = []
+    session = get_session()
+    courses = session.query(AvailableCourse).filter_by(user_id=user_id).all()
+    session.close()
+    for course in courses:
+        available_course = {
+            "subject_name": course.subject_name,
+            "code": course.code,
+            "grade": None,
+            "category": course.category,
+            "requirement": course.requirement,
+            "credit": course.credit,
+            "semester": course.semester_offered,
+            "year": course.year_offered,
+            "time_slot": None,
+            "day_of_week": None,
+            "prerequisites": None
+        }
+        available_courses.append(available_course)
+    return available_courses
+
+def submit_available_courses(user_id, semester_offered: int, year_offered: int):
+    base_year = 2023
+    limit_grade = year_offered - base_year + 1
+    year_offered = limit_grade
+    if semester_offered == 1:
+        next_year = year_offered
+        next_semester = 2
+    elif semester_offered == 2:
+        next_year = year_offered + 1
+        next_semester = 1
+    else:
+        raise ValueError("semester_offered must be 1 (前期) or 2 (後期)")
+
+    session = get_session()
+    courses = session.query(Subject).all()
+    available_courses = []
+    print(year_offered, semester_offered)
+    for course in courses:
+        if int(course.year_offered) == next_year and int(course.semester_offered) == next_semester:
+            available_courses.append(course)
+    for course in available_courses:
+        print(course.code, course.subject_name, course.year_offered, course.semester_offered, flush=True)
+
+    session.query(AvailableCourse).filter_by(user_id=user_id).delete()
+    for course in available_courses:
+        new_entry = AvailableCourse(
+            user_id=user_id,
+            code=course.code,
+            subject_name=course.subject_name,
+            category=course.category,
+            requirement=course.requirement,
+            credit=course.credit,
+            semester_offered=course.semester_offered,
+            year_offered=course.year_offered
+        )
+        session.add(new_entry)
+
+    session.commit()
+
+
+
+
+
 
 def make_send_courses(courses: list):
     send_courses = []
@@ -56,7 +176,6 @@ def make_send_available_courses(semester_offered: int, year_offered: int, send_c
     base_year = 2023
     limit_grade = year_offered - base_year + 1
     limit_semester = semester_offered
-    print(limit_grade, limit_semester)
 
     taken_codes = set(course["code"] for course in send_courses)
 

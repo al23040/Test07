@@ -1,115 +1,129 @@
-/* src/components/CurrentSemesterRecommendation.css */
+/* frontend/my-course-registration-app/src/components/W8_CurrentSemesterRecommendation.css */
 
-.current-semester-recommendation {
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  position: relative; /* next-button の配置のために必要 */
-  padding-bottom: 70px; /* ボタンのスペースを確保 */
-}
-
-.current-semester-recommendation h2 {
-  color: #333;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #61dafb;
-  padding-bottom: 10px;
-}
-
-.current-semester-recommendation h3,
-.current-semester-recommendation h4 {
-  color: #555;
-  margin-top: 25px;
-  margin-bottom: 15px;
-}
-
-.current-semester-recommendation p {
-  line-height: 1.6;
-  color: #666;
-}
-
-.current-semester-recommendation ul {
-  list-style-type: disc;
-  padding-left: 25px;
-  margin-bottom: 20px;
-}
-
-.current-semester-recommendation li {
-  margin-bottom: 8px;
-  color: #444;
-}
-
-/* 時間割テーブルのスタイル */
-.timetable-section {
-  margin-top: 30px;
-}
-
-.timetable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  background-color: #fdfdfd;
-}
-
-.timetable th,
-.timetable td {
-  border: 1px solid #ddd;
-  padding: 12px 8px;
-  text-align: center;
-  font-size: 0.95em;
-  vertical-align: middle;
-}
-
-.timetable th {
-  background-color: #eef;
-  color: #333;
-  font-weight: bold;
-}
-
-.timetable tr:nth-child(even) {
+.recommendation-container {
+  padding: 25px;
   background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  font-family: sans-serif;
 }
 
-.timetable td:first-child {
-  background-color: #eef;
+.recommendation-header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #61dafb;
+  padding-bottom: 20px;
+}
+
+.recommendation-header h1 {
+  color: #2c3e50;
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.recommendation-header .summary-message {
+  color: #555;
+  font-size: 1.1em;
+}
+
+.recommendation-header .summary-meta {
+  margin-top: 15px;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.recommendation-body {
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* セクション間の余白 */
+}
+
+.course-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.course-section h2 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.course-section .section-description {
+  font-size: 0.9em;
+  color: #777;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+.course-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.course-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.course-item:last-child {
+  border-bottom: none;
+}
+
+.course-item:hover {
+  background-color: #f5fafd;
+}
+
+.course-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.course-name {
   font-weight: bold;
   color: #333;
 }
 
-.timetable td {
-  min-width: 100px; /* 科目名が入りきるように最小幅を設定 */
+.course-details {
+  font-size: 0.85em;
+  color: #888;
+  margin-top: 4px;
 }
 
-.timetable td:empty::before {
-  content: "---"; /* 空のセルに表示する内容 */
-  color: #aaa;
-}
-
-.notes {
-  margin-top: 30px;
-  font-style: italic;
+.recommendation-footer {
+  margin-top: 40px;
+  text-align: center;
   color: #777;
-  border-top: 1px dashed #eee;
-  padding-top: 15px;
+  font-size: 0.9em;
 }
 
-/* 「次へ」ボタンのスタイル */
-.next-button {
-  display: block; /* ブロック要素にして中央寄せしやすくする */
-  width: fit-content; /* 内容の幅に合わせる */
-  margin: 30px auto 0 auto; /* 中央寄せ */
-  padding: 12px 25px;
-  background-color: #28a745; /* 緑系の色 */
+.btn-link {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #007bff;
   color: white;
   text-decoration: none;
-  border-radius: 8px;
-  font-size: 1.1em;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
-.next-button:hover {
-  background-color: #218838; /* ホバーで少し濃く */
-  transform: translateY(-2px); /* わずかに浮き上がる */
+.btn-link:hover {
+  background-color: #0056b3;
+}
+
+/* ローディングとエラーメッセージのスタイル */
+.loading-container, .error-container {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2em;
+  color: #555;
 }

@@ -20,6 +20,8 @@ class CourseCategory(Enum):
     INFORMATICS = "情報科目"
     HEALTH_PE = "体育健康科目"
     MAJOR = "専門科目"
+    COMMON_ENGINEERING = "共通工学系教養科目"
+    HUMANITIES_SOCIAL = "人文社会系教養科目"
 
 
 class RequirementType(Enum):
@@ -95,7 +97,9 @@ class ConditionProcessor:
             CourseCategory.LANGUAGE: {'compulsory': 8, 'elective': 0},
             CourseCategory.INFORMATICS: {'compulsory': 4, 'elective': 0},
             CourseCategory.HEALTH_PE: {'compulsory': 2, 'elective': 0},
-            CourseCategory.MAJOR: {'compulsory': 40, 'elective': 50}
+            CourseCategory.MAJOR: {'compulsory': 40, 'elective': 50},
+            CourseCategory.COMMON_ENGINEERING: {'compulsory': 0, 'elective': 8},
+            CourseCategory.HUMANITIES_SOCIAL: {'compulsory': 0, 'elective': 6}
         }
         self.total_required_credits = 124
 
@@ -221,6 +225,9 @@ class ConditionProcessor:
             if total_credits >= conditions.max_units:
                 break
 
+            if course.category not in remaining_requirements:
+                continue
+                
             category_remaining = remaining_requirements[course.category]
             req_type = 'compulsory' if course.requirement == RequirementType.COMPULSORY else 'elective'
 
@@ -294,13 +301,41 @@ class ConditionProcessor:
                                      remaining_requirements: Dict[CourseCategory, Dict[str, int]],
                                      conditions: UserConditions) -> PlanPattern:
         """Generate early major focus pattern"""
-        # Similar implementation focusing on major courses early
+        yearly_patterns = []
+        # Prioritize major courses in early years
+        for year in range(1, 5):
+            year_patterns = []
+            for semester in range(1, 3):
+                # Focus on major courses for years 1-2
+                if year <= 2:
+                    # Filter to prioritize major courses
+                    major_courses = [c for c in available_courses if c.category == CourseCategory.MAJOR]
+                    semester_courses = self._select_semester_courses(
+                        major_courses + available_courses, remaining_requirements, conditions, year, semester
+                    )
+                else:
+                    semester_courses = self._select_semester_courses(
+                        available_courses, remaining_requirements, conditions, year, semester
+                    )
+                
+                pattern = SuggestedCoursePattern(
+                    semester=semester,
+                    year=year,
+                    courses=semester_courses,
+                    total_credits=sum(c.credit for c in semester_courses),
+                    category_credits=self._calculate_category_credits(semester_courses)
+                )
+                year_patterns.append(pattern)
+            yearly_patterns.append(year_patterns)
+
+        total_credits = sum(sum(p.total_credits for p in year) for year in yearly_patterns)
+
         return PlanPattern(
             pattern_id="pattern2",
             description="専門重視型 - 早期に専門科目を履修",
-            yearly_patterns=[],
-            total_credits=0,
-            graduation_feasible=False
+            yearly_patterns=yearly_patterns,
+            total_credits=total_credits,
+            graduation_feasible=total_credits >= self.total_required_credits
         )
 
     def _generate_flexible_pattern(self,
@@ -308,13 +343,43 @@ class ConditionProcessor:
                                   remaining_requirements: Dict[CourseCategory, Dict[str, int]],
                                   conditions: UserConditions) -> PlanPattern:
         """Generate flexible pattern"""
-        # Similar implementation with flexibility focus
+        yearly_patterns = []
+        # Distribute courses more evenly with lighter semester loads
+        for year in range(1, 5):
+            year_patterns = []
+            for semester in range(1, 3):
+                # Use lighter target credits for flexibility
+                light_conditions = UserConditions(
+                    min_units=max(12, conditions.min_units - 2),
+                    max_units=min(18, conditions.max_units - 2),
+                    preferences=conditions.preferences,
+                    avoid_first_period=conditions.avoid_first_period,
+                    preferred_time_slots=conditions.preferred_time_slots,
+                    preferred_categories=conditions.preferred_categories
+                )
+                
+                semester_courses = self._select_semester_courses(
+                    available_courses, remaining_requirements, light_conditions, year, semester
+                )
+                
+                pattern = SuggestedCoursePattern(
+                    semester=semester,
+                    year=year,
+                    courses=semester_courses,
+                    total_credits=sum(c.credit for c in semester_courses),
+                    category_credits=self._calculate_category_credits(semester_courses)
+                )
+                year_patterns.append(pattern)
+            yearly_patterns.append(year_patterns)
+
+        total_credits = sum(sum(p.total_credits for p in year) for year in yearly_patterns)
+
         return PlanPattern(
             pattern_id="pattern3",
             description="フレキシブル型 - 柔軟性を重視した履修計画",
-            yearly_patterns=[],
-            total_credits=0,
-            graduation_feasible=False
+            yearly_patterns=yearly_patterns,
+            total_credits=total_credits,
+            graduation_feasible=total_credits >= self.total_required_credits
         )
 
     def _select_semester_courses(self,

@@ -1,70 +1,83 @@
 // src/components/W7_FourYearPatternList.js
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchFourYearPatterns } from '../api'; // 修正されたapi.jsからインポート
+import { fetchFourYearPatterns } from '../api'; // API関数
 import './W7_FourYearPatternList.css';
+import axios from 'axios';
+
+// --- Contextをインポート ---
+import { useAuth } from '../context/AuthContext';
+import { useConditions } from '../context/ConditionsContext';
 
 const W7_FourYearPatternList = () => {
   const [patterns, setPatterns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 仮のユーザーIDと条件。実際にはログイン情報や希望条件入力画面から取得する
-  const userId = 12345; // ログインしているユーザーのIDに置き換える
-  const userConditions = {
-    min_units: 16,
-    max_units: 20,
-    preferences: ["balanced"],
-    avoid_first_period: false,
-    preferred_time_slots: [],
-    preferred_categories: [],
-    preferred_days: [],
-    avoided_days: []
-  };
+  // --- Contextから必要なデータを取得 ---
+  const { userId } = useAuth();
+  const { conditions } = useConditions();
+
 
   useEffect(() => {
+    // ユーザー情報や科目情報がまだ読み込まれていない場合は、処理を開始しない
+    if (!userId) {
+      return;
+    }
+
     const getPatterns = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        // C4 APIを呼び出す際にuserIdとconditionsを渡す
-        // FourYearPatternListは詳細ではなく、パターン概要のリストを期待
-        const data = await fetchFourYearPatterns(userId, userConditions);
-        setPatterns(data); // dataはパターンの配列を直接含むと想定
+        // Contextから取得したデータをAPI関数に渡す
+        const dataToSend = {
+          userId: userId,
+          conditions: conditions,
+        };
+        const resCompleted = await axios.post(`/api/c7/user_allcourses/${userId}`, dataToSend);
+        const resall = await axios.post(`/api/c7/user_allcourses/${userId}`, dataToSend);
+        const completedCourses = resCompleted.data.completed_courses;
+        const allCourses = resall.data.all_courses;
+        const data = await fetchFourYearPatterns(
+          userId,
+          conditions,
+          completedCourses,
+          allCourses
+        );
+        setPatterns(data);
       } catch (err) {
         setError(err);
       } finally {
         setLoading(false);
       }
     };
+
     getPatterns();
-  }, [userId, JSON.stringify(userConditions)]);
+    // 依存配列にContextから取得した値を追加
+  }, [userId, conditions]);
 
-  if (loading) {
-    return <div className="loading">履修パターンをロード中...</div>;
-  }
-
-  if (error) {
-    return <div className="error">データのロードに失敗しました: {error.message}</div>;
-  }
-
-  if (!patterns || patterns.length === 0) {
-    return <div className="no-data">利用可能な履修パターンが見つかりませんでした。</div>;
-  }
+  // Contextのデータ読み込み中 + このコンポーネントのデータ読み込み中の両方を考慮
+  if (error) return <div className="error-container"><p>エラーが発生しました: {error.message}</p></div>;
 
   return (
     <div className="four-year-pattern-list">
-      <h2>4年間の履修登録パターン候補</h2>
-      <div className="pattern-cards">
-        {patterns.map(pattern => (
-          <div key={pattern.id} className="pattern-card">
-            <h3>{pattern.name}</h3>
-            <p className="pattern-description">{pattern.description}</p>
-            <p className="pattern-total-units">総取得単位数: {pattern.totalUnits}単位</p>
-            <Link to={`/patterns/${pattern.id}`} className="view-detail-button">
-              詳細を見る
-            </Link>
-          </div>
-        ))}
-      </div>
+      <h2>4年間の履修パターン</h2>
+      {patterns && patterns.length > 0 ? (
+        <ul>
+          {patterns.map((pattern) => (
+            <li key={pattern.id}>
+              <Link to={`/patterns/${pattern.id}`}>
+                <h3>{pattern.name}</h3>
+                <p>{pattern.description}</p>
+                <span>総単位数: {pattern.totalUnits}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>表示できる履修パターンがありません。</p>
+      )}
     </div>
   );
 };

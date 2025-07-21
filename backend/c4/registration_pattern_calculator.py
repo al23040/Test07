@@ -73,7 +73,9 @@ class RegistrationPatternCalculator:
             CourseCategory.LANGUAGE: {'compulsory': 8, 'elective': 0},
             CourseCategory.INFORMATICS: {'compulsory': 4, 'elective': 0},
             CourseCategory.HEALTH_PE: {'compulsory': 2, 'elective': 0},
-            CourseCategory.MAJOR: {'compulsory': 40, 'elective': 50}
+            CourseCategory.MAJOR: {'compulsory': 40, 'elective': 50},
+            CourseCategory.COMMON_ENGINEERING: {'compulsory': 0, 'elective': 8},
+            CourseCategory.HUMANITIES_SOCIAL: {'compulsory': 0, 'elective': 6}
         }
 
         # Calculate completed credits by category
@@ -197,8 +199,9 @@ class RegistrationPatternCalculator:
                 for course in semester_courses:
                     used_courses.add(course.code)
                     req_type = 'compulsory' if course.requirement == RequirementType.COMPULSORY else 'elective'
-                    working_reqs[course.category][req_type] = max(0,
-                        working_reqs[course.category][req_type] - course.credit)
+                    if course.category in working_reqs:
+                        working_reqs[course.category][req_type] = max(0,
+                            working_reqs[course.category][req_type] - course.credit)
 
                 pattern = SuggestedCoursePattern(
                     semester=semester,
@@ -215,7 +218,7 @@ class RegistrationPatternCalculator:
 
         return PlanPattern(
             pattern_id=f"{strategy_name}_002",
-            description="集中パターン - 前半に専門科目を集中し、研究室配属に向けて準備",
+            description="専門重視型 - 早期に専門科目を履修",
             yearly_patterns=yearly_patterns,
             total_credits=total_credits,
             graduation_feasible=self._check_graduation_feasibility(working_reqs, total_credits)
@@ -250,8 +253,9 @@ class RegistrationPatternCalculator:
                 for course in semester_courses:
                     used_courses.add(course.code)
                     req_type = 'compulsory' if course.requirement == RequirementType.COMPULSORY else 'elective'
-                    working_reqs[course.category][req_type] = max(0,
-                        working_reqs[course.category][req_type] - course.credit)
+                    if course.category in working_reqs:
+                        working_reqs[course.category][req_type] = max(0,
+                            working_reqs[course.category][req_type] - course.credit)
 
                 pattern = SuggestedCoursePattern(
                     semester=semester,
@@ -268,7 +272,7 @@ class RegistrationPatternCalculator:
 
         return PlanPattern(
             pattern_id=f"{strategy_name}_003",
-            description="分散パターン - 各カテゴリの科目を均等に配置し、学習負荷を平準化",
+            description="フレキシブル型 - 柔軟性を重視した履修計画",
             yearly_patterns=yearly_patterns,
             total_credits=total_credits,
             graduation_feasible=self._check_graduation_feasibility(working_reqs, total_credits)
@@ -297,7 +301,7 @@ class RegistrationPatternCalculator:
 
         # First priority: Required courses
         for category in CourseCategory:
-            if remaining_reqs[category]['compulsory'] > 0:
+            if category in remaining_reqs and remaining_reqs[category]['compulsory'] > 0:
                 category_courses = [
                     c for c in available_for_semester
                     if (c.category == category and
@@ -324,7 +328,9 @@ class RegistrationPatternCalculator:
                         current_credits + c.credit <= min(target_credits, user_conditions.max_units))
                 ]
 
-                for course in category_courses[:2]:
+                category_courses.sort(key=lambda x: self._course_priority_score(x, remaining_reqs), reverse=True)
+
+                for course in category_courses[:3]:  # Allow more courses for priority categories
                     selected_courses.append(course)
                     current_credits += course.credit
                     if current_credits >= target_credits:

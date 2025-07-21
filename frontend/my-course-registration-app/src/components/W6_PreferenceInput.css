@@ -1,70 +1,225 @@
 /* W6_PreferenceInput.css */
-html, body {
+.container html, 
+.container body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   font-family: 'MS Gothic', monospace;
-  background-color: #f8f8f8;
+  background-color: #f0f4f8;
+  color: #333;
+  line-height: 1.6;
 }
 
 .container {
-  max-width: 600px;
-  margin: auto;
-  border: 1px solid #ccc;
-  padding: 30px;
-  background: white;
+  max-width: 650px;
+  margin: 40px auto;
+  border-radius: 8px;
+  padding: 40px 50px;
+  background: #ffffff;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
-h1 {
-  font-size: 24px;
-  font-weight: bold;
+.container h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+  color: #1a73e8;
+}
+
+.container .input-group {
   margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.input-group {
+.container .input-group.day-preference-group {
+    align-items: flex-start;
+}
+
+.container .input-group.day-preference-group > div:nth-of-type(1),
+.container .input-group.day-preference-group > div:nth-of-type(2) {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.container .input-group.day-preference-group > div > span {
+    font-weight: 600;
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
+
+.container .input-group .day-selection-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 0;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.container .input-group .day-selection-group label {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+    font-weight: normal;
+    font-size: 15px;
+    color: #555;
+    display: flex;
+    align-items: center;
+}
+
+.container .input-group .day-selection-group label input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.container label {
+  flex: 0 0 160px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #444;
+  cursor: pointer;
+  user-select: none;
+}
+
+.container input[type="number"],
+.container input[type="text"],
+.container select {
+  flex: 1 1 300px;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1.8px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.container input[type="number"]:focus,
+.container input[type="text"]:focus,
+.container select:focus {
+  border-color: #1a73e8;
+  outline: none;
+  box-shadow: 0 0 6px #a3c0f9;
+}
+
+.container input.half-width {
+  width: 80px;
+  text-align: right;
+  margin-left: 8px;
+  margin-right: 8px;
+  flex: 0 0 auto;
+}
+
+.container .details-box {
+  margin-left: 160px;
+  margin-top: 10px;
+  padding: 15px 20px;
+  border: 1px solid #ddd;
+  background: #f9fbff;
+  border-radius: 6px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  display: block;
+}
+
+.container .input-group > label {
+    display: flex;
+    align-items: center;
+    flex: none;
+    margin-bottom: 0;
+}
+
+.container .input-group > label input[type="checkbox"] {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.container .details-box label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 15px;
+  color: #555;
+  cursor: pointer;
+}
+
+.container .details-box label input[type="checkbox"] {
+  margin-right: 12px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.container .details-box input[type="number"],
+.container .details-box input[type="text"],
+.container .details-box select {
+  margin-top: 5px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.container .plus-item {
   margin-bottom: 20px;
 }
 
-label {
-  display: inline-block;
-  width: 150px;
-  vertical-align: top;
-}
-
-input.half-width {
-  width: 50px;
-  text-align: right;
-}
-
-select {
-  width: 250px;
-}
-
-.details-box {
-  margin-left: 30px;
-  margin-top: 10px;
-  display: none;
-}
-
-.details-box input[type="number"],
-.details-box input[type="text"],
-.details-box select {
-  margin-top: 5px;
-  margin-bottom: 10px;
+.container #next-button {
   display: block;
-  width: 250px;
-}
-
-.details-box .plus-item,
-.details-box .minus-item,
-.details-box .priority-item {
-  margin-bottom: 15px;
-}
-
-#next-button {
-  margin-top: 20px;
-  padding: 8px 16px;
-  font-size: 16px;
+  margin: 40px auto 0;
+  padding: 12px 28px;
+  font-size: 18px;
+  font-weight: 700;
+  background-color: #1a73e8;
+  border: none;
+  border-radius: 30px;
+  color: white;
   cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.2s ease;
+  box-shadow: 0 3px 8px rgba(26,115,232,0.6);
+  width: 180px;
+  text-align: center;
+}
+
+.container #next-button:hover,
+.container #next-button:focus {
+  background-color: #155ab6;
+  box-shadow: 0 6px 15px rgba(21,90,182,0.9);
+  outline: none;
+}
+
+@media (max-width: 700px) {
+  .container {
+    padding: 30px 20px;
+  }
+
+  .container .input-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .container label {
+    flex: none;
+    margin-bottom: 6px;
+  }
+
+  .container .details-box {
+    margin-left: 0;
+    padding: 15px;
+  }
+
+  .container .input-group .day-selection-group {
+      margin-left: 0;
+      justify-content: flex-start;
+      gap: 10px;
+  }
+  
+  .container .input-group.day-preference-group > div:nth-of-type(1),
+  .container .input-group.day-preference-group > div:nth-of-type(2) {
+      margin-left: 0;
+  }
 }
