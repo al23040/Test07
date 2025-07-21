@@ -135,34 +135,53 @@ class C4API:
                     all_courses
                 )
 
-                # Convert to JSON response matching frontend format
-                pattern_id = data.get('pattern_id')  # Check if specific pattern requested
+                pattern_id = data.get('pattern_id')
                 
                 if pattern_id:
-                    # Return specific pattern details
                     found_pattern = next((p for p in patterns if p.pattern_id == pattern_id), None)
                     if found_pattern:
-                        response_data = self._plan_pattern_to_dict(found_pattern)
-                    else:
-                        return jsonify({'error': 'Pattern not found'}), 404
-                else:
-                    # Return summary of all patterns with recommendedSubjects
-                    pattern_summaries = []
-                    for pattern in patterns:
-                        # Extract all courses from all semesters in the pattern
                         all_courses_in_pattern = []
-                        for year_patterns in pattern.yearly_patterns:
+                        for year_patterns in found_pattern.yearly_patterns:
                             for semester_pattern in year_patterns:
                                 all_courses_in_pattern.extend(semester_pattern.courses)
                         
-                        # Format courses as recommendedSubjects (same format as current-semester endpoint)
                         recommended_subjects = [
                             {
                                 'id': course.code,
                                 'name': course.subject_name,
                                 'units': course.credit,
                                 'category': course.category.value,
-                                'semester': '前期' if course.semester == 1 else '後期'
+                                'semester': '前期' if course.semester == 1 else '後期',
+                                'year': course.year
+                            }
+                            for course in all_courses_in_pattern
+                        ]
+                        
+                        response_data = {
+                            'id': found_pattern.pattern_id,
+                            'name': f'パターン{found_pattern.pattern_id.replace("pattern", "")}',
+                            'description': found_pattern.description,
+                            'totalUnits': found_pattern.total_credits,
+                            'recommendedSubjects': recommended_subjects
+                        }
+                    else:
+                        return jsonify({'error': 'Pattern not found'}), 404
+                else:
+                    pattern_summaries = []
+                    for pattern in patterns:
+                        all_courses_in_pattern = []
+                        for year_patterns in pattern.yearly_patterns:
+                            for semester_pattern in year_patterns:
+                                all_courses_in_pattern.extend(semester_pattern.courses)
+                        
+                        recommended_subjects = [
+                            {
+                                'id': course.code,
+                                'name': course.subject_name,
+                                'units': course.credit,
+                                'category': course.category.value,
+                                'semester': '前期' if course.semester == 1 else '後期',
+                                'year': course.year
                             }
                             for course in all_courses_in_pattern
                         ]

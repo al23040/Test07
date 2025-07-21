@@ -80,21 +80,25 @@ const W7_FourYearPatternDetail = () => {
         </div>
       </header>
 
-      <div className="semesters-grid">
-        {patternDetail.semesters.map((semester, index) => (
-          <section key={index} className="semester-card">
-            <h3>{semester.year}年次 {semester.semester}</h3>
-            <ul className="course-list-detail">
-              {semester.courses && semester.courses.map((course, courseIndex) => (
-                <li key={courseIndex}>
+      <section className="course-section">
+        <h2>推奨科目リスト</h2>
+        {patternDetail.recommendedSubjects && patternDetail.recommendedSubjects.length > 0 ? (
+          <ul className="course-list-detail">
+            {patternDetail.recommendedSubjects.map((course) => (
+              <li key={course.id}>
+                <div className="course-info">
                   <span className="course-name">{course.name}</span>
-                  <span className="course-credits">{course.credits}単位</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-      </div>
+                  <span className="course-details">
+                    {course.year}年次 {course.semester} / {course.category} / {course.units}単位
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>推奨される科目は見つかりませんでした。</p>
+        )}
+      </section>
 
       <footer className="pattern-detail-footer">
         <Link to="/patterns" className="back-link">← パターン一覧へ戻る</Link>
